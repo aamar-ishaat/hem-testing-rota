@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<link rel="manifest" href="manifest.json">
 <title>HeM Testing — COVID-19 Clearance Management</title>
 <style>
   :root {
@@ -341,6 +342,39 @@
   .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+  /* ---------- Print styles ---------- */
+  @media print {
+    body { background: #ffffff !important; color: #000000 !important; }
+    .app, header, nav, .topbar, .sidebar, .backdrop, .btn, .icon-btn, .badge-driver, .admin-only-section, .storage-info, .page-header .bar-flex, .print-hide { display: none !important; }
+    .page.active { display: block !important; }
+    .card { border: none; box-shadow: none; margin: 0; page-break-inside: avoid; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #000000; padding: 6px 8px; font-size: 9pt; }
+    .stat { background: #ffffff !important; border: 1px solid #000000; page-break-inside: avoid; }
+    .stat .big { color: #000000; }
+    .badge { border: 1px solid #000000; color: #000000; background: #ffffff !important; }
+    .status-cleared, .result-negative { background: #e8f5e9 !important; color: #2e7d32 !important; }
+    .status-not-cleared, .result-positive { background: #ffebee !important; color: #c62828 !important; }
+    .status-clearance-pending, .result-invalid { background: #fff3e0 !important; color: #ef6c00 !important; }
+  }
+  .print-hide { display: none; }
+
+  /* ---------- Quick date chips ---------- */
+  .date-chips { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .date-chip { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--muted); font-weight: 800; font-size: 0.86rem; cursor: pointer; transition: 0.18s; white-space: nowrap; }
+  .date-chip:hover { border-color: var(--primary); color: var(--primary); }
+  .date-chip.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+  body.dark .date-chip { background: #334155; border-color: #475569; color: var(--ink); }
+  body.dark .date-chip.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+  /* ---------- Session lock ---------- */
+  #lock-screen { display: none; position: fixed; inset: 0; background: var(--card); z-index: 1000; padding: 40px; }
+  .lock-card { max-width: 380px; margin: 0 auto; text-align: center; }
+  .lock-card h2 { margin: 0 0 8px 0; font-size: 1.5rem; font-weight: 900; }
+  .lock-card p { margin: 0 0 24px 0; color: var(--muted); }
+  .lock-card input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 14px; font-size: 1rem; text-align: center; letter-spacing: 2px; margin-bottom: 16px; }
+  body.dark .lock-card input { background: #1e293b; border-color: #334155; color: var(--ink); }
+
   svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 </style>
 </head>
@@ -469,13 +503,21 @@
           <div style="display:flex;gap:10px">
             <button class="btn primary" id="btn-save-mulaqat" onclick="saveMulaqat()" style="display:none">Save</button>
             <button class="btn" onclick="loadHemTesters()">Load 34 HeM Testers</button>
+            <button class="btn" onclick="exportCsv()">Export CSV</button>
+            <button class="btn" onclick="window.print()">Print A4</button>
             <button class="btn danger" onclick="clearMulaqat()">Clear Today</button>
           </div>
         </div>
 
-        <div class="date-picker-wrap" style="margin-bottom:16px">
+        <div class="date-picker-wrap" style="margin-bottom:12px">
           <label>Date</label>
           <input type="date" id="mulaqat-date" onchange="setMulaqatDate(this.value)" value="2026-10-17">
+        </div>
+
+        <div class="date-chips">
+          <span class="date-chip" onclick="setDateChip('2026-10-17')">Sat 17 Oct</span>
+          <span class="date-chip" onclick="setDateChip('2026-10-18')">Sun 18 Oct</span>
+          <span class="date-chip" onclick="setDateChip('2026-10-19')">Mon 19 Oct</span>
         </div>
 
         <div class="card">
@@ -571,6 +613,9 @@
             <h2 class="page-title">People</h2>
             <p class="page-sub">34 testers · UK & Germany · login credentials shown</p>
           </div>
+          <div style="display:flex;gap:10px">
+            <input type="text" id="people-search" placeholder="Search name or ID..." oninput="renderPeople()" style="padding:8px 14px;border:1px solid var(--border);border-radius:10px;background:#f8fafc;">
+          </div>
         </div>
         <div class="legend">
           <span><span class="dot dot-night"></span> Night</span>
@@ -614,6 +659,16 @@
     </div>
   </div>
 </div>
+
+<!-- Session lock screen -->
+<section id="lock-screen">
+  <div class="lock-card">
+    <h2>Session Locked</h2>
+    <p>Enter your PIN to unlock</p>
+    <input type="password" id="lock-pin" maxlength="4" placeholder="0000">
+    <button onclick="unlockSession()" class="btn primary">Unlock</button>
+  </div>
+</section>
 
 <!-- Login screen (full page before app shell) -->
 <section id="login-screen" style="display:flex;align-items:center;justify-content:center;height:100vh;padding:24px;background:var(--bg)">
@@ -692,15 +747,18 @@ const testingRota = [
 // ==============================
 // STATE & CONFIG
 // ==============================
-const ST = "hem_app_v7";
-const US = "hem_user_v7";
-const THEME = "hem_theme_v7";
-const CFG = "hem_config_v7";
+const ST = "hem_app_v8";
+const US = "hem_user_v8";
+const THEME = "hem_theme_v8";
+const CFG = "hem_config_v8";
+const LOCK = "hem_lock_v8";
 let state = { testerRecords: {}, mulaqatLists: {}, urduPdfs: {} };
 let config = { apiUrl: "", apiEnabled: false };
 let currentUser = null;
 let mulaqatDate = "2026-10-17";
 let pdfDate = "2026-10-17";
+let lockTimer = null;
+let lastActivity = Date.now();
 
 function loadState() {
   try { const r = localStorage.getItem(ST); if (r) state = JSON.parse(r); } catch (e) {}
@@ -710,6 +768,7 @@ function loadState() {
   try { const t = localStorage.getItem(THEME); if (t === 'dark') document.body.classList.add('dark'); } catch (e) {}
   updateThemeIcon();
   updateApiStatusUI();
+  setupSessionLock();
 }
 
 function initRecord() {
@@ -734,6 +793,51 @@ function initRecord() {
 
 function saveState() { try { localStorage.setItem(ST, JSON.stringify(state)); } catch (e) {} }
 function saveConfig() { try { localStorage.setItem(CFG, JSON.stringify(config)); } catch (e) {} }
+
+// ==============================
+// SESSION LOCK (simple PIN for shared devices)
+// ==============================
+function setupSessionLock() {
+  const pin = localStorage.getItem(LOCK);
+  if (!pin) {
+    localStorage.setItem(LOCK, "0000");
+  }
+  document.addEventListener('mousedown', resetLockTimer);
+  document.addEventListener('keydown', resetLockTimer);
+  document.addEventListener('scroll', resetLockTimer);
+  lockTimer = setInterval(checkLock, 1000);
+}
+
+function resetLockTimer() {
+  lastActivity = Date.now();
+  document.getElementById('lock-screen')?.style.display?.toString() === 'none' ? null : hideLock();
+}
+
+function hideLock() {
+  const el = document.getElementById('lock-screen');
+  if (el) el.style.display = 'none';
+}
+
+function checkLock() {
+  if (!currentUser) return;
+  const idleMinutes = (Date.now() - lastActivity) / 60000;
+  if (idleMinutes >= 5) {
+    const el = document.getElementById('lock-screen');
+    if (el) el.style.display = 'flex';
+  }
+}
+
+function unlockSession() {
+  const pin = document.getElementById('lock-pin').value;
+  const correct = localStorage.getItem(LOCK) || '0000';
+  if (pin === correct) {
+    hideLock();
+    lastActivity = Date.now();
+    document.getElementById('lock-pin').value = '';
+  } else {
+    alert('Incorrect PIN. Default PIN is 0000.');
+  }
+}
 
 // ==============================
 // API LAYER (ready for your backend)
@@ -875,6 +979,7 @@ function show(key) {
   if (key === 'pdfs') renderPdfs();
   if (key === 'settings') renderSettings();
   if (key === 'validation-page') renderValidation();
+  lastActivity = Date.now();
 }
 
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('backdrop').classList.toggle('show'); }
@@ -908,13 +1013,19 @@ function nowStr(){ const d=new Date(); return d.toISOString().slice(11,16); }
 // ==============================
 function renderPeople() {
   const tb = document.getElementById('people-body');
-  tb.innerHTML = people.map((p,i) => {
+  const search = document.getElementById('people-search')?.value?.toLowerCase() || '';
+  const filtered = people.filter((p,i) =>
+    p.name.toLowerCase().includes(search) ||
+    p.testerId.includes(search) ||
+    (i+1).toString().includes(search)
+  );
+  tb.innerHTML = filtered.map((p, idx) => {
     const driver = p.driver ? '<span class="badge badge-driver">Driver</span>' : '—';
     const onRota = p.hemOnRota ? '<span class="ok">Yes</span>' : '<span class="flag">No</span>';
     const note = p.note ? ' <span class="flag" style="font-size:0.78rem" title="'+p.note+'">!</span>' : '';
     const role = p.isAdmin ? '<span class="badge badge-admin">Admin</span>' : '<span class="badge badge-test">Tester</span>';
     return `<tr>
-      <td class="nr">${i+1}</td>
+      <td class="nr">${people.indexOf(p)+1}</td>
       <td class="name"><strong>${p.name}</strong>${note}</td>
       <td><span class="badge ${countryClass(p.country)}">${p.country}</span></td>
       <td><span class="badge badge-${shiftClass(p.shift)}">${shiftLabel(p.shift)}</span></td>
@@ -1132,6 +1243,15 @@ function testerAction(testerId, action){
 // ==============================
 function setMulaqatDate(d){ mulaqatDate = d; if(document.getElementById('mulaqat').classList.contains('active')) renderMulaqat(); }
 function setPdfDate(d){ pdfDate = d; if(document.getElementById('pdfs').classList.contains('active')) renderPdfs(); }
+function setDateChip(d) {
+  mulaqatDate = d;
+  document.getElementById('mulaqat-date').value = d;
+  document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('active'));
+  const labelMap = { '2026-10-17': 'Sat 17 Oct', '2026-10-18': 'Sun 18 Oct', '2026-10-19': 'Mon 19 Oct' };
+  const chip = Array.from(document.querySelectorAll('.date-chip')).find(c => c.textContent.trim() === labelMap[d]);
+  if (chip) chip.classList.add('active');
+  if(document.getElementById('mulaqat').classList.contains('active')) renderMulaqat();
+}
 
 function emptyRow(nr){ return {nr,name:"",amount:"",start:"",end:"",arrived:false,tested:false,cleared:false,notes:"",tested2:"",tested3:""}; }
 function ensureMulaqat(d){
@@ -1226,6 +1346,30 @@ function saveMulaqat(){
   t.style.cssText='position:fixed;top:110px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:.8rem 1.4rem;border-radius:12px;font-size:.88rem;z-index:9999;box-shadow:0 8px 24px -6px rgba(29,78,216,0.35)';
   document.body.appendChild(t);
   setTimeout(()=>t.remove(),1800);
+}
+
+function exportCsv() {
+  const rows = ensureMulaqat(mulaqatDate);
+  const headers = ['Nr','Name','Shift','Status','Result','Clearance','Start Time','End Time','Duration','Notes'];
+  const lines = [headers.join(',')];
+  rows.forEach(r => {
+    const p = people.find(x => x.testerId === String(r.nr).padStart(2,'0'));
+    const shift = p ? shiftLabel(p.shift) : '';
+    const escCsv = (v) => String(v==null?'':v).includes(',') ? `"${String(v).replace(/"/g,'""')}"` : String(v);
+    lines.push([
+      r.nr, escCsv(r.name), shift, r.status, r.testResult||'', r.clearance||'', r.start, r.end,
+      durationText(r.start,r.end), escCsv(r.notes)
+    ].join(','));
+  });
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `hem-mulaqat-${mulaqatDate}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 // ==============================
@@ -1403,6 +1547,15 @@ checkAuth();
 renderPeople();
 renderRota();
 renderValidation();
+
+// Register service worker for PWA offline support
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    console.log('SW registered', reg);
+  }).catch(err => {
+    console.log('SW registration failed', err);
+  });
+}
 
 </script>
 </body>

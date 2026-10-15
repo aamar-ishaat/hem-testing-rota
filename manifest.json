@@ -1,0 +1,27 @@
+{
+  "name": "HeM Testing",
+  "short_name": "HeM Testing",
+  "description": "COVID-19 testing and clearance management for Hadeeqatul Mahdi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1d4ed8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231d4ed8'%3E%3Cpath d='M12 2L1 21h22L12 2zm0 17.5L4.5 12.5 6.08 10.88 12 15.69 17.92 10.88 19.5 12.5z'/%3E%3C/svg%3E",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231d4ed8'%3E%3Cpath d='M12 2L1 21h22L12 2zm0 17.5L4.5 12.5 6.08 10.88 12 15.69 17.92 10.88 19.5 12.5z'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231d4ed8'%3E%3Cpath d='M12 2L1 21h22L12 2zm0 17.5L4.5 12.5 6.08 10.88 12 15.69 17.92 10.88 19.5 12.5z'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
