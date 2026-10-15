@@ -2,76 +2,122 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeM Testing Rota — 17–19 October 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<title>HeM Testing Rota — 17–19 Oct 2026</title>
 <style>
-  * { box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background: #f5f7fa; color: #1a1a1a; }
-  header { background: #0b3d62; color: #fff; padding: 1rem 1.5rem; }
-  header h1 { margin: 0; font-size: 1.25rem; }
-  header p { margin: 0.25rem 0 0; font-size: 0.875rem; opacity: 0.9; }
-  nav { background: #fff; border-bottom: 1px solid #e2e4e7; display: flex; overflow-x: auto; }
-  nav button { flex-shrink: 0; padding: 0.75rem 1rem; border: none; background: transparent; color: #6b7280; cursor: pointer; font-size: 0.9rem; border-bottom: 2px solid transparent; white-space: nowrap; }
-  nav button.active { color: #0b3d62; border-bottom-color: #0b3d62; font-weight: 600; }
-  nav button:hover { background: #f3f4f6; }
-  .container { max-width: 900px; margin: 0 auto; padding: 1rem; }
+  /* Reset & base */
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { font-size: 16px; }
+  body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #ffffff; color: #111827; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  header { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 1rem 1rem 0.75rem; position: sticky; top: 0; z-index: 100; }
+  header .bar { display: flex; align-items: center; gap: 0.75rem; }
+  header h1 { margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
+  header p { margin: 0.15rem 0 0; font-size: 0.82rem; color: #6b7280; }
+
+  /* Nav */
+  nav { display: flex; gap: 0; overflow-x: auto; border-bottom: 1px solid #e5e7eb; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  nav button { flex: 1 1 auto; min-width: 0; padding: 0.85rem 0.6rem; border: none; background: transparent; color: #6b7280; font-size: 0.82rem; font-weight: 600; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; }
+  nav button.active { color: #0b3d62; border-bottom-color: #0b3d62; background: #f0f7fd; }
+  nav button:not(.active):hover { background: #f9fafb; color: #374151; }
+
+  /* Container */
+  .container { max-width: 900px; margin: 0 auto; padding: 1rem 1rem 3rem; }
+
+  /* Sections */
   .section { display: none; }
   .section.active { display: block; }
-  .card { background: #fff; border: 1px solid #e2e4e7; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
-  .card h2 { margin: 0 0 0.75rem; font-size: 1.1rem; color: #0b3d62; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-  th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid #eef0f3; vertical-align: top; }
-  th { background: #f8fafc; font-weight: 600; color: #374151; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
-  tr:hover { background: #f8fafc; }
-  .badge { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
-  .badge-night { background: #dbeafe; color: #1e40af; }
-  .badge-morning { background: #dcfce7; color: #166534; }
-  .badge-day { background: #fef3c7; color: #92400e; }
-  .badge-na { background: #e5e7eb; color: #374151; }
-  .badge-uk { background: #fee2e2; color: #991b1b; }
-  .badge-de { background: #e0e7ff; color: #3730a3; }
-  .flag { color: #b91c1c; font-weight: 600; font-size: 0.85rem; }
-  .ok { color: #166534; font-weight: 600; font-size: 0.85rem; }
-  .warn { color: #92400e; font-weight: 600; font-size: 0.85rem; }
-  .driver { background: #fef3c7; border: 1px solid #f59e0b; }
-  .rota-day { background: #fff; border: 1px solid #e2e4e7; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
-  .rota-day h3 { margin: 0 0 0.5rem; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; }
+
+  /* Cards */
+  .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+  .card:last-child { margin-bottom: 0; }
+  .card h2 { margin: 0 0 0.75rem; font-size: 1.05rem; font-weight: 700; color: #111827; letter-spacing: -0.01em; }
+  .card p { margin: 0 0 0.75rem; font-size: 0.86rem; color: #4b5563; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; margin-bottom: 0.75rem; font-size: 0.78rem; color: #6b7280; }
+  .legend span { display: flex; align-items: center; gap: 0.35rem; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .dot-night { background: #1e3a8a; }
+  .dot-morning { background: #15803d; }
+  .dot-day { background: #b45309; }
+  .dot-na { background: #9ca3af; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  th { text-align: left; padding: 0.55rem 0.7rem; font-size: 0.72rem; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 2px solid #f3f4f6; white-space: nowrap; }
+  td { padding: 0.55rem 0.7rem; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: #f9fafb; }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 0.12rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+  .badge-night { background: #dbeafe; color: #1e3a8a; border: 1px solid #bfdbfe; }
+  .badge-morning { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+  .badge-day { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+  .badge-na { background: #e5e7eb; color: #374151; border: 1px solid #d1d5db; }
+  .badge-uk { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+  .badge-de { background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; }
+  .badge-driver { background: #fbbf24; color: #78350f; border: 1px solid #fcd34d; }
+
+  /* Status text */
+  .ok { color: #15803d; font-weight: 700; font-size: 0.8rem; }
+  .flag { color: #b91c1c; font-weight: 700; font-size: 0.8rem; }
+  .warn { color: #b45309; font-weight: 700; font-size: 0.8rem; }
+
+  /* Driver chip */
+  .driver-chip { font-size: 0.7rem; padding: 0.08rem 0.4rem; border-radius: 4px; background: #f59e0b; color: #ffffff; margin-left: 0.35rem; }
+
+  /* Rota day cards */
+  .rota-day { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+  .rota-day h3 { margin: 0 0 0.6rem; font-size: 1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; color: #111827; }
   .rota-team { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .person-chip { padding: 0.4rem 0.75rem; border-radius: 6px; background: #f3f4f6; border: 1px solid #e5e7eb; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; }
-  .person-chip.driver { border: 2px solid #f59e0b; }
-  .person-chip .shift-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
-  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
-  .stat { background: #fff; border: 1px solid #e2e4e7; border-radius: 8px; padding: 0.75rem; }
-  .stat .val { font-size: 1.5rem; font-weight: 700; color: #0b3d62; }
-  .stat .lbl { font-size: 0.8rem; color: #6b7280; margin-top: 0.25rem; }
-  .legend { display: flex; gap: 1rem; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.5rem; flex-wrap: wrap; }
-  .legend span { display: flex; align-items: center; gap: 0.3rem; }
-  .shift-color { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-  .night-color { background: #1e40af; }
-  .morning-color { background: #166534; }
-  .day-color { background: #92400e; }
-  .na-color { background: #9ca3af; }
-  .driver-chip { font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 4px; background: #f59e0b; color: #fff; }
-  .empty-state { text-align: center; color: #6b7280; padding: 2rem; }
+  .person-chip { padding: 0.45rem 0.75rem; border-radius: 8px; background: #f3f4f6; border: 1px solid #e5e7eb; font-size: 0.84rem; font-weight: 600; color: #111827; display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+  .person-chip.driver { border: 2px solid #d97706; background: #fdf4e3; }
+  .person-chip .shift-tag { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; padding: 0.08rem 0.35rem; border-radius: 4px; background: #e5e7eb; color: #374151; }
+  .night .shift-tag { background: #dbeafe; color: #1e3a8a; }
+  .morning .shift-tag { background: #dcfce7; color: #15803d; }
+  .day .shift-tag { background: #fef3c7; color: #b45309; }
+
+  /* Stats grid */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.7rem; margin-bottom: 1rem; }
+  .stat { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 0.75rem 0.8rem; }
+  .stat .val { font-size: 1.35rem; font-weight: 800; color: #0b3d62; line-height: 1.2; }
+  .stat .lbl { font-size: 0.72rem; color: #6b7280; margin-top: 0.2rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; }
+
+  /* Lists */
+  ul { margin: 0; padding-left: 1.1rem; color: #374151; }
+  li { margin-bottom: 0.5rem; font-size: 0.88rem; }
+  li .flag { margin-right: 0.4rem; }
+
+  .empty { text-align: center; color: #9ca3af; padding: 2rem; font-size: 0.9rem; }
+
+  /* Back to top hint on mobile */
   @media (max-width: 600px) {
-    .container { padding: 0.5rem; }
-    th, td { padding: 0.4rem 0.5rem; font-size: 0.8rem; }
-    header h1 { font-size: 1.1rem; }
-    .rota-day { padding: 0.75rem; }
+    .container { padding: 0.75rem 0.75rem 2.5rem; }
+    .card { padding: 0.85rem 0.95rem; }
+    .rota-day { padding: 0.85rem 0.95rem; }
+    th, td { padding: 0.45rem 0.6rem; font-size: 0.8rem; }
+    .stat .val { font-size: 1.2rem; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>HeM Testing Rota — 17–19 October 2026</h1>
-  <p>34 people · UK & Germany · Shift-based teams · Flags for HeM rota mismatches</p>
+  <div class="bar">
+    <h1>HeM Testing Rota</h1>
+    <p>17–19 October 2026 · 34 people · UK & Germany</p>
+  </div>
 </header>
 
 <nav>
-  <button onclick="showSection('people')" id="nav-people">People</button>
-  <button onclick="showSection('rota')" id="nav-rota">Rota 17–19 Oct</button>
-  <button onclick="showSection('validation')" id="nav-validation">Validation & Flags</button>
+  <button onclick="show('people')" id="tab-people">People</button>
+  <button onclick="show('rota')" id="tab-rota">Rota 17–19 Oct</button>
+  <button onclick="show('validation')" id="tab-validation">Validation &amp; Flags</button>
 </nav>
 
 <div class="container">
@@ -80,20 +126,20 @@
   <section id="people" class="section active">
     <div class="card">
       <h2>People (34)</h2>
-      <p class="legend">
-        <span><span class="shift-color night-color"></span> Night</span>
-        <span><span class="shift-color morning-color"></span> Morning</span>
-        <span><span class="shift-color day-color"></span> Day</span>
-        <span><span class="shift-color na-color"></span> Not on HeM rota</span>
-        <span><span class="badge-uk">UK</span></span>
-        <span><span class="badge-de">Germany</span></span>
-        <span title="Designated driver">🚗 Designated driver</span>
-      </p>
+      <p>Tap a column header to scan. <span class="badge badge-driver">🚗</span> = designated driver · <span class="badge badge-na">—</span> = not on HeM rota</p>
+      <div class="legend">
+        <span><span class="dot dot-night"></span> Night</span>
+        <span><span class="dot dot-morning"></span> Morning</span>
+        <span><span class="dot dot-day"></span> Day</span>
+        <span><span class="dot dot-na"></span> Not on rota</span>
+        <span><span class="badge badge-uk">UK</span></span>
+        <span><span class="badge badge-de">Germany</span></span>
+      </div>
       <table>
         <thead>
-          <tr><th>Name</th><th>Country</th><th>Shift</th><th>In-Charge</th><th>Designated Driver</th><th>HeM Rota Exceptions</th><th>On HeM Rota</th></tr>
+          <tr><th>Name</th><th>Country</th><th>Shift</th><th>Driver</th><th>On HeM Rota</th><th>Notes</th></tr>
         </thead>
-        <tbody id="people-table"></tbody>
+        <tbody id="people-body"></tbody>
       </table>
     </div>
   </section>
@@ -101,8 +147,8 @@
   <!-- ROTA -->
   <section id="rota" class="section">
     <div class="card">
-      <h2>Testing Rota — 17, 18, 19 October 2026</h2>
-      <p>Each day's testing team is drawn from a single HeM shift, matching your current rota practice.</p>
+      <h2>Testing Rota — 17, 18, 19 October</h2>
+      <p>Each day’s testing team is drawn from one HeM shift, matching your current rota practice.</p>
       <div id="rota-days"></div>
     </div>
   </section>
@@ -111,123 +157,103 @@
   <section id="validation" class="section">
     <div class="card">
       <h2>Validation &amp; Flags</h2>
-      <div class="stat-grid" id="validation-stats"></div>
-      <div id="validation-list"></div>
+      <div class="stat-grid" id="stats"></div>
+      <div id="flag-list"></div>
     </div>
   </section>
 
 </div>
 
 <script>
-// ==============================
-// PEOPLE DATA (34 people)
-// ==============================
 const people = [
-  // ---- UK ----
-  { id: 1, name: "Abdul-Hai Sarmad", country: "UK", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 2, name: "Humaid Mahmud Khan", country: "UK", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 3, name: "Fuad Alam", country: "UK", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 4, name: "Aamar Shezad", country: "UK", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "morning", role: "Shift In-Charge" }] },
-  { id: 5, name: "Khaqan Muzafar Arain", country: "UK", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 6, name: "Taha Uddin Khandaker", country: "UK", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 7, name: "Nasir Hussain", country: "UK", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 8, name: "Ibtesam Ahmed Tahir", country: "UK", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "day", role: "Shift In-Charge" }] },
-  { id: 9, name: "Faizan Ahmad Gill", country: "UK", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Friday", onShift: "day", role: "Paddocks 1" }] },
-  { id: 10, name: "Subat Ahmad Munib", country: "UK", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Saturday", onShift: "night", role: "Barrier" }] },
-  { id: 11, name: "Hasher Ahmad Mubasher", country: "UK", shift: "day", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 12, name: "Labeed Ahmad Mirza", country: "UK", shift: "day", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 13, name: "Shazib Ahmad Arshad", country: "UK", shift: "day", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: null, role: "Not on rota — Ibtesam covers his post" }] },
-  { id: 14, name: "Adeeb Ahmed", country: "UK", shift: null, inCharge: false, driver: true, hemOnRota: false, exceptions: [], hemNote: "Not Available — not on HeM rota at all. Designated driver." },
-  { id: 15, name: "Mirza Anas Ahmad", country: "UK", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not Available — not on HeM rota at all." },
-  { id: 16, name: "Mutahir Ahmad Danish", country: "UK", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not Available — not on HeM rota at all." },
-
-  // ---- Germany ----
-  { id: 17, name: "Basil Javed", country: "Germany", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 18, name: "Burhanuddin Faizan", country: "Germany", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 19, name: "Mujahid Ahmad", country: "Germany", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 20, name: "Adeeb Ahmad", country: "Germany", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [], hemNote: "Paddocks 1 every night." },
-  { id: 21, name: "Wasiq Khalid", country: "Germany", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "HeM rota name: Parvez Wasiq Khalid Bahatti" }], hemNote: "Linked to HeM rota name: Parvez Wasiq Khalid Bahatti." },
-  { id: 22, name: "Danish Ahmad", country: "Germany", shift: "night", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "" }] },
-  { id: 23, name: "Jazib Aziz", country: "Germany", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 24, name: "Awais Qamar", country: "Germany", shift: "morning", inCharge: false, driver: false, hemOnRota: true, exceptions: [], hemNote: "Morning only Monday and Saturday — free other days." },
-  { id: 25, name: "Farhan Masroor", country: "Germany", shift: "day", inCharge: false, driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: null, role: "Free — Day shift Tue–Sat only" }] },
-  { id: 26, name: "Sultan Sami", country: "Germany", shift: "day", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 27, name: "Hamzah Ahmed", country: "Germany", shift: "day", inCharge: false, driver: false, hemOnRota: true, exceptions: [] },
-  { id: 28, name: "Mubariz Ahmad", country: "Germany", shift: "day", inCharge: false, driver: false, hemOnRota: true, exceptions: [], hemNote: "HeM shift isn't one of the three (CCTV 4pm–10pm weekdays, 2pm–10pm Saturday). Counts as Day per your rota." },
-  { id: 29, name: "Faroch Khurram", country: "Germany", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not on HeM rota at all — free at any time." },
-  { id: 30, name: "Adeeb Butt", country: "Germany", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not Available — on HeM duty (Monday night, then morning)." },
-  { id: 31, name: "Fayaz", country: "Germany", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not Available — CCTV nights." },
-  { id: 32, name: "Umar Rashid", country: "Germany", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not on HeM rota." },
-  { id: 33, name: "Talal Ahmad", country: "Germany", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not on HeM rota." },
-  { id: 34, name: "Sajeel Bajwa", country: "Germany", shift: null, inCharge: false, driver: false, hemOnRota: false, exceptions: [], hemNote: "Not on HeM rota." },
+  { id: 1, name: "Abdul-Hai Sarmad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 2, name: "Humaid Mahmud Khan", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 3, name: "Fuad Alam", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 4, name: "Aamar Shezad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "morning", role: "Shift In-Charge" }] },
+  { id: 5, name: "Khaqan Muzafar Arain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 6, name: "Taha Uddin Khandaker", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 7, name: "Nasir Hussain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 8, name: "Ibtesam Ahmed Tahir", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "day", role: "Shift In-Charge" }] },
+  { id: 9, name: "Faizan Ahmad Gill", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Friday", onShift: "day", role: "Paddocks 1" }] },
+  { id: 10, name: "Subat Ahmad Munib", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Saturday", onShift: "night", role: "Barrier" }] },
+  { id: 11, name: "Hasher Ahmad Mubasher", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 12, name: "Labeed Ahmad Mirza", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 13, name: "Shazib Ahmad Arshad", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: null, role: "Not on rota — Ibtesam covers his post" }] },
+  { id: 14, name: "Adeeb Ahmed", country: "UK", shift: null, driver: true, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all. Designated driver." },
+  { id: 15, name: "Mirza Anas Ahmad", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all." },
+  { id: 16, name: "Mutahir Ahmad Danish", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all." },
+  { id: 17, name: "Basil Javed", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 18, name: "Burhanuddin Faizan", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 19, name: "Mujahid Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 20, name: "Adeeb Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "Paddocks 1 every night." },
+  { id: 21, name: "Wasiq Khalid", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "HeM rota name: Parvez Wasiq Khalid Bahatti" }], note: "Linked to HeM rota name: Parvez Wasiq Khalid Bahatti." },
+  { id: 22, name: "Danish Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "" }] },
+  { id: 23, name: "Jazib Aziz", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 24, name: "Awais Qamar", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "Morning only Monday and Saturday — free other days." },
+  { id: 25, name: "Farhan Masroor", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: null, role: "Free — Day shift Tue–Sat only" }] },
+  { id: 26, name: "Sultan Sami", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 27, name: "Hamzah Ahmed", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 28, name: "Mubariz Ahmad", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "Counts as Day per your rota (HeM shift is CCTV, not one of the three)." },
+  { id: 29, name: "Faroch Khurram", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota at all — free at any time." },
+  { id: 30, name: "Adeeb Butt", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — on HeM duty (Monday night, then morning)." },
+  { id: 31, name: "Fayaz", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — CCTV nights." },
+  { id: 32, name: "Umar Rashid", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota." },
+  { id: 33, name: "Talal Ahmad", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota." },
+  { id: 34, name: "Sajeel Bajwa", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota." },
 ];
 
-// Day names for 17–19 Oct 2026
-// 17 Oct = Saturday, 18 Oct = Sunday, 19 Oct = Monday
 const rotaDays = [
   { date: "17 Oct 2026", dayName: "Saturday", iso: "2026-10-17", hemCovered: true },
   { date: "18 Oct 2026", dayName: "Sunday", iso: "2026-10-18", hemCovered: true },
-  { date: "19 Oct 2026", dayName: "Monday", iso: "2026-10-19", hemCovered: false }, // HeM rota stops at 18th
+  { date: "19 Oct 2026", dayName: "Monday", iso: "2026-10-19", hemCovered: false },
 ];
 
-// Testing rota: each day's team comes from ONE shift
 const testingRota = [
-  { date: "2026-10-17", shift: "night", people: [2, 10, 18] },   // Humaid (Night), Subat (Night — Sat night on HeM), Burhanuddin (Night)
-  { date: "2026-10-18", shift: "morning", people: [8, 9, 23] },  // Ibtesam (Morning), Faizan Gill (Morning), Jazib Aziz (Morning)
-  { date: "2026-10-19", shift: "night", people: [4, 3, 17] },    // Aamar (Night), Fuad (Night), Basil (Night)
+  { date: "2026-10-17", shift: "night", people: [2, 10, 18] },
+  { date: "2026-10-18", shift: "morning", people: [8, 9, 23] },
+  { date: "2026-10-19", shift: "night", people: [4, 3, 17] },
 ];
 
-// ==============================
-// RENDERERS
-// ==============================
-function showSection(id) {
+function show(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.getElementById('nav-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
 }
 
-function shiftBadge(shift) {
-  const map = { night: 'badge-night', morning: 'badge-morning', day: 'badge-day', null: 'badge-na' };
-  const label = shift ? shift.charAt(0).toUpperCase() + shift.slice(1) : '—';
-  return `<span class="badge ${map[shift]}">${label}</span>`;
+function shiftClass(s) { return { night: 'night', morning: 'morning', day: 'day', null: 'na' }[s] || 'na'; }
+function shiftLabel(s) {
+  if (!s) return '—';
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
-
-function countryBadge(c) {
-  return c === 'UK' ? '<span class="badge badge-uk">UK</span>' : '<span class="badge badge-de">Germany</span>';
-}
+function countryClass(c) { return c === 'UK' ? 'badge-uk' : 'badge-de'; }
 
 function renderPeople() {
-  const tbody = document.getElementById('people-table');
-  tbody.innerHTML = people.map(p => {
+  const tb = document.getElementById('people-body');
+  tb.innerHTML = people.map(p => {
     const exc = p.exceptions.length
       ? p.exceptions.map(e => {
-          const onShift = e.onShift ? e.onShift.charAt(0).toUpperCase() + e.onShift.slice(1) : 'off rota';
-          return `${e.day}: ${onShift}${e.role ? ' (' + e.role + ')' : ''}`;
+          const on = e.onShift ? shiftLabel(e.onShift) : 'off rota';
+          return `${e.day}: ${on}${e.role ? ' (' + e.role + ')' : ''}`;
         }).join('; ')
-      : (p.hemNote || 'None');
+      : (p.note || 'None');
+    const driver = p.driver ? '<span class="badge badge-driver">🚗 Driver</span>' : '—';
     const onRota = p.hemOnRota ? '<span class="ok">✓ Yes</span>' : '<span class="flag">✗ No</span>';
-    const driver = p.driver ? '<span class="driver-chip">🚗 Driver</span>' : '—';
+    const note = p.note ? ' <span class="flag" style="font-size:0.78rem" title="' + p.note + '">!</span>' : '';
     return `<tr>
-      <td><strong>${p.name}</strong>${p.hemNote ? ' <span class="flag" title="' + p.hemNote + '">!</span>' : ''}</td>
-      <td>${countryBadge(p.country)}</td>
-      <td>${shiftBadge(p.shift)}</td>
-      <td>${p.inCharge ? '✓' : '—'}</td>
+      <td><strong>${p.name}</strong>${note}</td>
+      <td><span class="badge ${countryClass(p.country)}">${p.country}</span></td>
+      <td><span class="badge badge-${shiftClass(p.shift)}">${shiftLabel(p.shift)}</span></td>
       <td>${driver}</td>
-      <td>${exc}</td>
       <td>${onRota}</td>
+      <td>${exc}</td>
     </tr>`;
   }).join('');
 }
 
-function personName(id) {
-  return people.find(p => p.id === id).name;
-}
-
 function personShiftOnDay(p, dayName) {
-  // Return the shift this person is on for the given HeM day name
   const exc = p.exceptions.find(e => e.day === dayName);
-  if (exc) return exc.onShift; // null means off rota that day
+  if (exc) return exc.onShift;
   return p.shift;
 }
 
@@ -238,108 +264,96 @@ function renderRota() {
     const team = assignment.people.map(id => {
       const p = people.find(x => x.id === id);
       const shiftOnDay = personShiftOnDay(p, rd.dayName);
-      const matchesDayShift = shiftOnDay === assignment.shift;
       const notOnRota = !p.hemOnRota;
-      const flag = notOnRota ? ' <span class="flag">not on HeM rota</span>' : (matchesDayShift ? '' : ' <span class="flag">shift mismatch</span>');
-      return {
-        p, shiftOnDay, matchesDayShift, notOnRota, flag
-      };
+      const mismatch = !notOnRota && shiftOnDay !== assignment.shift;
+      const allMatch = team.every(t => !t.notOnRota && t.shiftOnDay === assignment.shift);
+      return { p, shiftOnDay, notOnRota, mismatch };
     });
-    const allMatch = team.every(t => t.matchesDayShift && !t.notOnRota);
-    const hemCovered = rd.hemCovered ? '' : ' <span class="flag">HeM rota does not cover this day</span>';
+    const allOk = team.every(t => !t.notOnRota && !t.mismatch);
+    const hemNote = rd.hemCovered ? '' : ' <span class="flag">HeM rota does not cover this day</span>';
     return `<div class="rota-day">
-      <h3>${rd.dayName}, ${rd.date}${hemCovered} <span class="${allMatch ? 'ok' : 'warn'}">${allMatch ? '✓ Team all on ' + assignment.shift + ' shift' : '⚠ Team issues'}</span></h3>
-      <div class="legend" style="margin-bottom:0.5rem"><strong>Day shift:</strong> ${assignment.shift.charAt(0).toUpperCase() + assignment.shift.slice(1)}</div>
+      <h3>${rd.dayName}, ${rd.date}${hemNote} <span class="${allOk ? 'ok' : 'warn'}">${allOk ? '✓ Team all on ' + shiftLabel(assignment.shift) + ' shift' : '⚠ Review team'}</span></h3>
+      <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.55rem"><strong>Day shift:</strong> ${shiftLabel(assignment.shift)}</div>
       <div class="rota-team">
-        ${team.map(t => `
-          <div class="person-chip ${t.p.driver ? 'driver' : ''}" title="${t.p.name} — ${t.p.country}">
-            <span class="shift-tag">${t.shiftOnDay ? t.shiftOnDay.charAt(0).toUpperCase() + t.shiftOnDay.slice(1) : 'OFF'}</span>
-            ${t.p.name}${t.p.driver ? ' <span class="driver-chip">🚗</span>' : ''}${t.flag}
-          </div>
-        `).join('')}
+        ${team.map(t => {
+          const sc = shiftClass(t.shiftOnDay);
+          return `<div class="person-chip ${t.p.driver ? 'driver' : ''} ${sc}" title="${t.p.name} — ${t.p.country}">
+            <span class="shift-tag">${t.shiftOnDay ? shiftLabel(t.shiftOnDay) : 'OFF'}</span>
+            ${t.p.name}${t.p.driver ? ' <span class="driver-chip">🚗</span>' : ''}
+            ${t.notOnRota ? ' <span class="flag">not on HeM rota</span>' : (t.mismatch ? ' <span class="flag">shift mismatch</span>' : '')}
+          </div>`;
+        }).join('')}
       </div>
     </div>`;
   }).join('');
 }
 
 function renderValidation() {
-  const stats = document.getElementById('validation-stats');
-  const list = document.getElementById('validation-list');
+  const stats = document.getElementById('stats');
+  const list = document.getElementById('flag-list');
 
-  let totalPeople = people.length;
-  let onRota = people.filter(p => p.hemOnRota).length;
-  let notOnRota = people.filter(p => !p.hemOnRota).length;
-  let drivers = people.filter(p => p.driver).length;
-  let nightCount = people.filter(p => p.shift === 'night').length;
-  let morningCount = people.filter(p => p.shift === 'morning').length;
-  let dayCount = people.filter(p => p.shift === 'day').length;
+  const total = people.length;
+  const onRota = people.filter(p => p.hemOnRota).length;
+  const notOnRota = people.filter(p => !p.hemOnRota).length;
+  const drivers = people.filter(p => p.driver).length;
+  const night = people.filter(p => p.shift === 'night').length;
+  const morning = people.filter(p => p.shift === 'morning').length;
+  const day = people.filter(p => p.shift === 'day').length;
 
-  // Check each day's team for shift consistency
   let dayIssues = 0;
   testingRota.forEach(r => {
+    const rd = rotaDays.find(d => d.iso === r.date);
     r.people.forEach(id => {
       const p = people.find(x => x.id === id);
-      const dayName = rotaDays.find(d => d.iso === r.date).dayName;
-      const shiftOnDay = personShiftOnDay(p, dayName);
-      if (!p.hemOnRota || shiftOnDay !== r.shift) dayIssues++;
+      const s = personShiftOnDay(p, rd.dayName);
+      if (!p.hemOnRota || s !== r.shift) dayIssues++;
     });
   });
-
-  // Days not covered by HeM rota
-  const uncoveredDays = rotaDays.filter(d => !d.hemCovered).length;
+  const uncovered = rotaDays.filter(d => !d.hemCovered).length;
 
   stats.innerHTML = `
-    <div class="stat"><div class="val">${totalPeople}</div><div class="lbl">Total people</div></div>
+    <div class="stat"><div class="val">${total}</div><div class="lbl">Total people</div></div>
     <div class="stat"><div class="val">${onRota}</div><div class="lbl">On HeM rota</div></div>
-    <div class="stat"><div class="val flag">${notOnRota}</div><div class="lbl">Not on HeM rota (flagged)</div></div>
+    <div class="stat"><div class="val ${notOnRota ? 'flag' : 'ok'}">${notOnRota}</div><div class="lbl">Not on HeM rota</div></div>
     <div class="stat"><div class="val">${drivers}</div><div class="lbl">Designated drivers</div></div>
-    <div class="stat"><div class="val">${nightCount}</div><div class="lbl">Night shift</div></div>
-    <div class="stat"><div class="val">${morningCount}</div><div class="lbl">Morning shift</div></div>
-    <div class="stat"><div class="val">${dayCount}</div><div class="lbl">Day shift</div></div>
+    <div class="stat"><div class="val">${night}</div><div class="lbl">Night shift</div></div>
+    <div class="stat"><div class="val">${morning}</div><div class="lbl">Morning shift</div></div>
+    <div class="stat"><div class="val">${day}</div><div class="lbl">Day shift</div></div>
     <div class="stat"><div class="val ${dayIssues ? 'flag' : 'ok'}">${dayIssues}</div><div class="lbl">Team shift issues</div></div>
-    <div class="stat"><div class="val ${uncoveredDays ? 'warn' : 'ok'}">${uncoveredDays}</div><div class="lbl">Days not covered by HeM</div></div>
+    <div class="stat"><div class="val ${uncovered ? 'warn' : 'ok'}">${uncovered}</div><div class="lbl">Days not HeM-covered</div></div>
   `;
 
   const flags = [];
-
-  // People not on HeM rota at all
   people.filter(p => !p.hemOnRota).forEach(p => {
-    flags.push({ type: 'person', text: `<strong>${p.name}</strong> (${p.country}) — not on HeM rota at all. ${p.driver ? 'Designated driver.' : ''} ${p.hemNote || ''}` });
+    flags.push(`<strong>${p.name}</strong> (${p.country}) — not on HeM rota at all. ${p.driver ? 'Designated driver.' : ''} ${p.note || ''}`);
   });
-
-  // Team members with shift issues on their assigned day
   testingRota.forEach(r => {
-    const dayName = rotaDays.find(d => d.iso === r.date).dayName;
+    const rd = rotaDays.find(d => d.iso === r.date);
     r.people.forEach(id => {
       const p = people.find(x => x.id === id);
-      const shiftOnDay = personShiftOnDay(p, dayName);
-      if (!p.hemOnRota) return; // already flagged above
-      if (shiftOnDay !== r.shift) {
-        const onShift = shiftOnDay ? shiftOnDay.charAt(0).toUpperCase() + shiftOnDay.slice(1) : 'OFF ROTA';
-        flags.push({ type: 'rota', text: `<strong>${p.name}</strong> on ${r.date} (${dayName}) testing team is ${r.charAt(0).toUpperCase() + r.shift.slice(1)} shift, but on HeM that day is ${onShift}.` });
+      if (!p.hemOnRota) return;
+      const s = personShiftOnDay(p, rd.dayName);
+      if (s !== r.shift) {
+        const on = s ? shiftLabel(s) : 'OFF ROTA';
+        flags.push(`<strong>${p.name}</strong> on ${r.date} (${rd.dayName}) — testing team is ${shiftLabel(r.shift)} shift, but HeM that day is ${on}.`);
       }
     });
   });
-
-  // Days not covered
   rotaDays.filter(d => !d.hemCovered).forEach(d => {
-    flags.push({ type: 'day', text: `<strong>${d.dayName}, ${d.date}</strong> — HeM rota does not cover this day (rota ends 18 Oct).` });
+    flags.push(`<strong>${d.dayName}, ${d.date}</strong> — HeM rota does not cover this day (ends 18 Oct).`);
   });
 
   if (flags.length === 0) {
     list.innerHTML = '<p class="ok">✓ No flags — everyone checks out.</p>';
   } else {
-    list.innerHTML = '<ul>' + flags.map(f => `<li><span class="flag">⚠</span> ${f.text}</li>`).join('') + '</ul>';
+    list.innerHTML = '<ul>' + flags.map(f => `<li><span class="flag">⚠</span> ${f}</li>`).join('') + '</ul>';
   }
 }
 
-// ==============================
-// INIT
-// ==============================
 renderPeople();
 renderRota();
 renderValidation();
-
+show('people');
 </script>
 </body>
 </html>
