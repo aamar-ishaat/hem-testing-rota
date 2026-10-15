@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<title>HeM Testing Rota — 17–19 Oct 2026</title>
+<title>HeM Testing Rota — Mulaqat Log</title>
 <style>
-  /* Reset & base */
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html { font-size: 16px; }
   body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #ffffff; color: #111827; line-height: 1.5; -webkit-font-smoothing: antialiased; }
@@ -18,24 +17,25 @@
   header p { margin: 0.15rem 0 0; font-size: 0.82rem; color: #6b7280; }
   header .user { margin-left: auto; font-size: 0.82rem; color: #6b7280; }
   header .user b { color: #111827; }
+  header .role { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 
   /* Nav */
-  nav { display: flex; gap: 0; overflow-x: auto; border-bottom: 1px solid #e5e7eb; scrollbar-width: none; }
+  nav { display: flex; gap: 0; overflow-x: auto; border-bottom: 1px solid #e5e7eb; scrollbar-width: none; background: #f9fafb; }
   nav::-webkit-scrollbar { display: none; }
   nav button { flex: 1 1 auto; min-width: 0; padding: 0.85rem 0.6rem; border: none; background: transparent; color: #6b7280; font-size: 0.82rem; font-weight: 600; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; }
   nav button.active { color: #0b3d62; border-bottom-color: #0b3d62; background: #f0f7fd; }
-  nav button:not(.active):hover { background: #f9fafb; color: #374151; }
+  nav button:not(.active):hover { background: #f3f4f6; color: #374151; }
 
   /* Container */
-  .container { max-width: 1100px; margin: 0 auto; padding: 1rem 1rem 3rem; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 1rem 1rem 3rem; }
 
   /* Sections */
   .section { display: none; }
   .section.active { display: block; }
 
   /* Login screen */
-  .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
-  .login-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 2rem 2.5rem; width: 100%; max-width: 420px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 55vh; }
+  .login-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 2rem 2.5rem; width: 100%; max-width: 440px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
   .login-card h2 { margin: 0 0 0.5rem; font-size: 1.15rem; font-weight: 700; }
   .login-card p { margin: 0 0 1.5rem; font-size: 0.86rem; color: #6b7280; }
   .login-card .err { color: #b91c1c; font-size: 0.82rem; margin-bottom: 1rem; display: none; }
@@ -50,6 +50,7 @@
   .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
   .card:last-child { margin-bottom: 0; }
   .card h2 { margin: 0 0 0.75rem; font-size: 1.05rem; font-weight: 700; color: #111827; letter-spacing: -0.01em; }
+  .card h3 { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 700; color: #111827; }
   .card p { margin: 0 0 0.75rem; font-size: 0.86rem; color: #4b5563; }
 
   /* Legend */
@@ -71,7 +72,6 @@
   tr.own-row td { border-color: #fde68a; }
   td.nr { font-weight: 800; color: #374151; width: 35px; }
   td.name { font-weight: 700; width: 190px; }
-  td.shift-col { width: 70px; }
 
   /* Badges */
   .badge { display: inline-block; padding: 0.12rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
@@ -82,11 +82,13 @@
   .badge-uk { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
   .badge-de { background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; }
   .badge-driver { background: #fbbf24; color: #78350f; border: 1px solid #fcd34d; }
+  .badge-admin { background: #0b3d62; color: #ffffff; border: 1px solid #083150; }
 
   /* Status text */
   .ok { color: #15803d; font-weight: 700; font-size: 0.8rem; }
   .flag { color: #b91c1c; font-weight: 700; font-size: 0.8rem; }
   .warn { color: #b45309; font-weight: 700; font-size: 0.8rem; }
+  .muted { color: #6b7280; font-size: 0.8rem; }
 
   /* Driver chip */
   .driver-chip { font-size: 0.7rem; padding: 0.08rem 0.4rem; border-radius: 4px; background: #f59e0b; color: #ffffff; margin-left: 0.35rem; }
@@ -100,6 +102,9 @@
   input.notes:focus { border-color: #0b3d62; outline: none; }
   input.amount { width: 80px; padding: 0.35rem 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem; background: #ffffff; text-align: right; }
   input.amount:focus { border-color: #0b3d62; outline: none; }
+  input.text { width: 100%; padding: 0.35rem 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem; background: #ffffff; }
+  input.text:focus { border-color: #0b3d62; outline: none; }
+  input.readonly { background: #f3f4f6; color: #6b7280; }
 
   /* Sheet controls */
   .sheet-bar { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; }
@@ -107,7 +112,11 @@
   .sheet-bar button:hover { border-color: #0b3d62; color: #0b3d62; }
   .sheet-bar button.primary { background: #0b3d62; color: #ffffff; border-color: #0b3d62; }
   .sheet-bar button.primary:hover { background: #083150; }
+  .sheet-bar button.danger { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+  .sheet-bar button.danger:hover { background: #fecaca; }
   .save-msg { font-size: 0.82rem; color: #15803d; font-weight: 700; margin-top: 0.4rem; display: none; }
+  .date-picker { margin-bottom: 0.75rem; font-size: 0.86rem; color: #374151; }
+  .date-picker label { font-weight: 700; margin-right: 0.5rem; }
 
   /* Stats grid */
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.7rem; margin-bottom: 1rem; }
@@ -133,17 +142,34 @@
   .morning .shift-tag { background: #dcfce7; color: #15803d; }
   .day .shift-tag { background: #fef3c7; color: #b45309; }
 
+  /* PDF list */
+  .pdf-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem; background: #f9fafb; }
+  .pdf-item .name { font-weight: 700; font-size: 0.86rem; flex: 1; }
+  .pdf-item .size { font-size: 0.76rem; color: #6b7280; }
+  .pdf-item .actions { display: flex; gap: 0.4rem; }
+  .pdf-item button { padding: 0.3rem 0.6rem; font-size: 0.78rem; border: 1px solid #d1d5db; border-radius: 6px; background: #ffffff; cursor: pointer; }
+  .pdf-item button:hover { border-color: #0b3d62; color: #0b3d62; }
+  .pdf-upload { border: 2px dashed #d1d5db; border-radius: 10px; padding: 1.2rem; text-align: center; margin-bottom: 0.75rem; cursor: pointer; transition: border-color 0.15s; }
+  .pdf-upload:hover { border-color: #0b3d62; }
+  .pdf-upload input { display: none; }
+
+  /* Duration badges */
+  .dur-ok { color: #15803d; font-weight: 700; font-size: 0.78rem; }
+  .dur-bad { color: #b91c1c; font-weight: 700; font-size: 0.78rem; }
+  .dur-late { color: #b45309; font-weight: 700; font-size: 0.78rem; }
+
   @media (max-width: 600px) {
     .container { padding: 0.75rem 0.75rem 2.5rem; }
     .card { padding: 0.85rem 0.95rem; }
     .rota-day { padding: 0.85rem 0.95rem; }
     th, td { padding: 0.45rem 0.5rem; font-size: 0.78rem; }
     .stat .val { font-size: 1.2rem; }
-    table { font-size: 0.76rem; }
-    th { padding: 0.45rem 0.5rem; font-size: 0.68rem; }
-    td.name { width: 140px; }
+    table { font-size: 0.74rem; }
+    th { padding: 0.45rem 0.5rem; font-size: 0.66rem; }
+    td.name { width: 130px; }
     input.time { width: 75px; }
     input.amount { width: 65px; }
+    .login-card { padding: 1.5rem; }
   }
 </style>
 </head>
@@ -152,42 +178,114 @@
 <header>
   <div class="bar">
     <h1>HeM Testing Rota</h1>
-    <p>17–19 October 2026 · 34 people · UK & Germany</p>
-    <div class="user" id="header-user" style="display:none">Signed in as <b id="user-name"></b> <button onclick="logout()" style="background:none;border:none;color:#0b3d62;font-weight:700;cursor:pointer;margin-left:0.5rem;font-size:0.8rem">Sign out</button></div>
+    <p>Mulaqat Log · 17–19 October 2026</p>
+    <div class="user" id="header-user" style="display:none">
+      <span id="user-name"></span>
+      <span class="role" id="user-role"></span>
+      <button onclick="logout()" style="background:none;border:none;color:#0b3d62;font-weight:700;cursor:pointer;margin-left:0.5rem;font-size:0.8rem">Sign out</button>
+    </div>
   </div>
 </header>
 
 <nav>
+  <button onclick="show('login')" id="tab-login">Login</button>
+  <button onclick="show('admin')" id="tab-admin">Admin Dashboard</button>
+  <button onclick="show('tester')" id="tab-tester">My Record</button>
   <button onclick="show('people')" id="tab-people">People</button>
   <button onclick="show('rota')" id="tab-rota">Rota 17–19 Oct</button>
   <button onclick="show('validation')" id="tab-validation">Validation &amp; Flags</button>
-  <button onclick="show('sheet')" id="tab-sheet">Tester Log</button>
 </nav>
 
 <div class="container">
 
-  <!-- LOGIN (shown when not signed in) -->
-  <section id="login-screen" class="section">
+  <!-- LOGIN -->
+  <section id="login" class="section active">
     <div class="login-wrap">
       <div class="login-card">
         <h2>Tester Sign In</h2>
-        <p>Enter your tester ID and code to log your testing status.</p>
-        <div class="err" id="login-err">Invalid ID or code. Please try again.</div>
+        <p>Enter your Tester ID, code and name to log your testing status.</p>
+        <div class="err" id="login-err">Invalid ID, code or name. Please try again.</div>
         <label for="login-id">Tester ID</label>
         <input type="text" id="login-id" placeholder="e.g. 01" maxlength="2">
         <label for="login-code">Code</label>
-        <input type="text" id="login-code" placeholder="e.g. ABCD" maxlength="4">
+        <input type="text" id="login-code" placeholder="e.g. K7M2" maxlength="4">
+        <label for="login-name">Name</label>
+        <input type="text" id="login-name" placeholder="e.g. Abdul-Hai Sarmad">
         <button onclick="doLogin()">Sign in</button>
-        <div class="hint">Not sure of your ID or code? Ask your rota coordinator.</div>
+        <div class="hint">Not sure of your ID, code or name? Ask your rota coordinator. Admin = Tester ID 01.</div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ADMIN DASHBOARD -->
+  <section id="admin" class="section">
+    <div class="card">
+      <h2>Admin Dashboard <span class="badge badge-admin">Admin</span></h2>
+      <p>Manage the daily Mulaqat list, Urdu PDFs and all tester records.</p>
+
+      <div class="date-picker">
+        <label for="admin-date">Select date</label>
+        <input type="date" id="admin-date" value="2026-10-17" onchange="adminSetDate(this.value)">
+      </div>
+      <div id="admin-date-label"></div>
+
+      <!-- Urdu PDFs -->
+      <div class="card" style="margin-top:1rem">
+        <h3>Urdu PDFs for <span id="pdf-date"></span></h3>
+        <div class="pdf-upload" onclick="document.getElementById('pdf-file').click()">
+          <p style="margin:0;font-size:0.86rem;color:#0b3d62;font-weight:700">📎 Click to upload an Urdu PDF</p>
+          <input type="file" id="pdf-file" accept="application/pdf" onchange="adminUploadPdf(this)">
+        </div>
+        <div id="pdf-list"></div>
+      </div>
+
+      <!-- Mulaqat list -->
+      <div class="card" style="margin-top:1rem">
+        <h3>Mulaqat List — <span id="mulaqat-date"></span></h3>
+        <p class="muted">Each test should be at least 10 min and ideally finished by 12:00. Durations are calculated automatically.</p>
+        <div class="sheet-bar">
+          <button class="primary" onclick="adminSaveMulaqat()">Save Mulaqat List</button>
+          <button onclick="adminLoadHeM()">Load 34 HeM Testers</button>
+          <button class="danger" onclick="adminClearMulaqat()">Clear Today</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nr</th><th>Name</th><th>Amount</th><th>Start Time</th><th>End Time</th><th>Duration</th><th>Arrived</th><th>Tested</th><th>Cleared</th><th>Notes</th><th>Tested 2</th><th>Tested 3</th>
+            </tr>
+          </thead>
+          <tbody id="mulaqat-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTER DASHBOARD -->
+  <section id="tester" class="section">
+    <div class="card">
+      <h2>My Record <span id="tester-role-badge"></span></h2>
+      <p id="tester-welcome"></p>
+
+      <div class="sheet-bar" style="margin-bottom:0.75rem">
+        <button class="primary" onclick="testerSaveOwn()">Save my record</button>
+      </div>
+
+      <h3 style="margin-top:1rem">Your HeM Tester Record</h3>
+      <table id="tester-own-table"></table>
+
+      <div class="card" style="margin-top:1rem">
+        <h3>Today's Mulaqat List</h3>
+        <p class="muted">Read-only. Prepared by the admin for <span id="tester-mulaqat-date"></span>.</p>
+        <table id="tester-mulaqat-table"></table>
+      </div>
+    </div>
+  </section>
 
   <!-- PEOPLE -->
-  <section id="people" class="section active">
+  <section id="people" class="section">
     <div class="card">
       <h2>People (34)</h2>
-      <p>Each tester’s ID and login code are shown below.</p>
+      <p>Each tester's ID and login code are shown below.</p>
       <div class="legend">
         <span><span class="dot dot-night"></span> Night</span>
         <span><span class="dot dot-morning"></span> Morning</span>
@@ -199,7 +297,7 @@
       </div>
       <table>
         <thead>
-          <tr><th>Nr</th><th>Name</th><th>Country</th><th>Shift</th><th>Driver</th><th>Tester ID</th><th>Login Code</th><th>On HeM Rota</th><th>Notes</th></tr>
+          <tr><th>Nr</th><th>Name</th><th>Country</th><th>Shift</th><th>Driver</th><th>Tester ID</th><th>Login Code</th><th>Role</th><th>On HeM Rota</th><th>Notes</th></tr>
         </thead>
         <tbody id="people-body"></tbody>
       </table>
@@ -210,7 +308,7 @@
   <section id="rota" class="section">
     <div class="card">
       <h2>Testing Rota — 17, 18, 19 October</h2>
-      <p>Each day’s testing team is drawn from one HeM shift, matching your current rota practice.</p>
+      <p>Each day's testing team is drawn from one HeM shift, matching your current rota practice.</p>
       <div id="rota-days"></div>
     </div>
   </section>
@@ -224,27 +322,6 @@
     </div>
   </section>
 
-  <!-- TESTER LOG / SHEET -->
-  <section id="sheet" class="section">
-    <div class="card">
-      <h2>Tester Log — 17–19 October 2026</h2>
-      <p id="sheet-subtitle"></p>
-      <div class="sheet-bar">
-        <button class="primary" onclick="saveSheet()">Save changes</button>
-        <button onclick="resetSheet()">Reset all</button>
-        <span class="save-msg" id="save-msg">✓ Saved</span>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Nr</th><th>Name</th><th>Shift</th><th>Amount</th><th>Arrived</th><th>Tested</th><th>Cleared</th><th>Start Time</th><th>End Time</th><th>Notes</th><th>Tested 2</th><th>Tested 3</th>
-          </tr>
-        </thead>
-        <tbody id="sheet-body"></tbody>
-      </table>
-    </div>
-  </section>
-
 </div>
 
 <script>
@@ -252,56 +329,41 @@
 // PEOPLE DATA (34 people)
 // ==============================
 const people = [
-  { id: 1, name: "Abdul-Hai Sarmad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 2, name: "Humaid Mahmud Khan", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 3, name: "Fuad Alam", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 4, name: "Aamar Shezad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "morning", role: "Shift In-Charge" }], note: "" },
-  { id: 5, name: "Khaqan Muzafar Arain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 6, name: "Taha Uddin Khandaker", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 7, name: "Nasir Hussain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 8, name: "Ibtesam Ahmed Tahir", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "day", role: "Shift In-Charge" }], note: "" },
-  { id: 9, name: "Faizan Ahmad Gill", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Friday", onShift: "day", role: "Paddocks 1" }], note: "" },
-  { id: 10, name: "Subat Ahmad Munib", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Saturday", onShift: "night", role: "Barrier" }], note: "" },
-  { id: 11, name: "Hasher Ahmad Mubasher", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 12, name: "Labeed Ahmad Mirza", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 13, name: "Shazib Ahmad Arshad", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: null, role: "Not on rota — Ibtesam covers his post" }], note: "" },
-  { id: 14, name: "Adeeb Ahmed", country: "UK", shift: null, driver: true, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all. Designated driver." },
-  { id: 15, name: "Mirza Anas Ahmad", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all." },
-  { id: 16, name: "Mutahir Ahmad Danish", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all." },
-  { id: 17, name: "Basil Javed", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 18, name: "Burhanuddin Faizan", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 19, name: "Mujahid Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 20, name: "Adeeb Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "Paddocks 1 every night." },
-  { id: 21, name: "Wasiq Khalid", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "HeM rota name: Parvez Wasiq Khalid Bahatti" }], note: "Linked to HeM rota name: Parvez Wasiq Khalid Bahatti." },
-  { id: 22, name: "Danish Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "" }] },
-  { id: 23, name: "Jazib Aziz", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 24, name: "Awais Qamar", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "Morning only Monday and Saturday — free other days." },
-  { id: 25, name: "Farhan Masroor", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: null, role: "Free — Day shift Tue–Sat only" }] },
-  { id: 26, name: "Sultan Sami", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 27, name: "Hamzah Ahmed", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
-  { id: 28, name: "Mubariz Ahmad", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "Counts as Day per your rota (HeM shift is CCTV, not one of the three)." },
-  { id: 29, name: "Faroch Khurram", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota at all — free at any time." },
-  { id: 30, name: "Adeeb Butt", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — on HeM duty (Monday night, then morning)." },
-  { id: 31, name: "Fayaz", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — CCTV nights." },
-  { id: 32, name: "Umar Rashid", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota." },
-  { id: 33, name: "Talal Ahmad", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota." },
-  { id: 34, name: "Sajeel Bajwa", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota." },
+  { id: 1, name: "Abdul-Hai Sarmad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "01", loginCode: "K7M2", isAdmin: true },
+  { id: 2, name: "Humaid Mahmud Khan", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "02", loginCode: "P9W4" },
+  { id: 3, name: "Fuad Alam", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "03", loginCode: "N1R8" },
+  { id: 4, name: "Aamar Shezad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "morning", role: "Shift In-Charge" }], note: "", testerId: "04", loginCode: "H3T6" },
+  { id: 5, name: "Khaqan Muzafar Arain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "05", loginCode: "V5B2" },
+  { id: 6, name: "Taha Uddin Khandaker", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "06", loginCode: "J8F1" },
+  { id: 7, name: "Nasir Hussain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "07", loginCode: "Q4D9" },
+  { id: 8, name: "Ibtesam Ahmed Tahir", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "day", role: "Shift In-Charge" }], note: "", testerId: "08", loginCode: "M6L3" },
+  { id: 9, name: "Faizan Ahmad Gill", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Friday", onShift: "day", role: "Paddocks 1" }], note: "", testerId: "09", loginCode: "S2X7" },
+  { id: 10, name: "Subat Ahmad Munib", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Saturday", onShift: "night", role: "Barrier" }], note: "", testerId: "10", loginCode: "W1P8" },
+  { id: 11, name: "Hasher Ahmad Mubasher", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "11", loginCode: "G5T2" },
+  { id: 12, name: "Labeed Ahmad Mirza", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "12", loginCode: "R9M4" },
+  { id: 13, name: "Shazib Ahmad Arshad", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: null, role: "Not on rota — Ibtesam covers his post" }], note: "", testerId: "13", loginCode: "C3V8" },
+  { id: 14, name: "Adeeb Ahmed", country: "UK", shift: null, driver: true, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all. Designated driver.", testerId: "14", loginCode: "D1H6" },
+  { id: 15, name: "Mirza Anas Ahmad", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all.", testerId: "15", loginCode: "B7F2" },
+  { id: 16, name: "Mutahir Ahmad Danish", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all.", testerId: "16", loginCode: "N9P4" },
+  { id: 17, name: "Basil Javed", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "17", loginCode: "L2X7" },
+  { id: 18, name: "Burhanuddin Faizan", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "18", loginCode: "V6T1" },
+  { id: 19, name: "Mujahid Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "19", loginCode: "F3M9" },
+  { id: 20, name: "Adeeb Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "Paddocks 1 every night.", testerId: "20", loginCode: "Q8R2" },
+  { id: 21, name: "Wasiq Khalid", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "HeM rota name: Parvez Wasiq Khalid Bahatti" }], note: "Linked to HeM rota name: Parvez Wasiq Khalid Bahatti.", testerId: "21", loginCode: "W5D9" },
+  { id: 22, name: "Danish Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "" }], note: "", testerId: "22", loginCode: "J1B6" },
+  { id: 23, name: "Jazib Aziz", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "23", loginCode: "K4T8" },
+  { id: 24, name: "Awais Qamar", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "Morning only Monday and Saturday — free other days.", testerId: "24", loginCode: "G2V5" },
+  { id: 25, name: "Farhan Masroor", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: null, role: "Free — Day shift Tue–Sat only" }], note: "", testerId: "25", loginCode: "P7F1" },
+  { id: 26, name: "Sultan Sami", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "26", loginCode: "M3X6" },
+  { id: 27, name: "Hamzah Ahmed", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "", testerId: "27", loginCode: "S9D2" },
+  { id: 28, name: "Mubariz Ahmad", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "Counts as Day per your rota (HeM shift is CCTV, not one of the three).", testerId: "28", loginCode: "A5N8" },
+  { id: 29, name: "Faroch Khurram", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota at all — free at any time.", testerId: "29", loginCode: "T4R1" },
+  { id: 30, name: "Adeeb Butt", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — on HeM duty (Monday night, then morning).", testerId: "30", loginCode: "C8L3" },
+  { id: 31, name: "Fayaz", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — CCTV nights.", testerId: "32", loginCode: "E6V9" },
+  { id: 32, name: "Umar Rashid", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota.", testerId: "33", loginCode: "H2P7" },
+  { id: 33, name: "Talal Ahmad", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota.", testerId: "34", loginCode: "N3D5" },
+  { id: 34, name: "Sajeel Bajwa", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota.", testerId: "35", loginCode: "J8M1" },
 ];
-
-// Login credentials per tester (ID + code). Displayed on People page so testers know theirs.
-function makeCredentials() {
-  const codes = [
-    "K7M2","P9W4","N1R8","H3T6","V5B2","J8F1","Q4D9","M6L3","S2X7","W1P8",
-    "G5T2","R9M4","C3V8","D1H6","B7F2","N9P4","L2X7","V6T1","F3M9","Q8R2",
-    "W5D9","J1B6","K4T8","G2V5","P7F1","M3X6","S9D2","A5N8","T4R1","C8L3",
-    "E6V9","H2P7","N3D5","J8M1","W4T6"
-  ];
-  people.forEach((p, i) => {
-    p.testerId = String(i + 1).padStart(2, '0');
-    p.loginCode = codes[i] || String(1000 + i);
-  });
-}
-makeCredentials();
 
 // Day names for 17–19 Oct 2026
 const rotaDays = [
@@ -310,123 +372,160 @@ const rotaDays = [
   { date: "19 Oct 2026", dayName: "Monday", iso: "2026-10-19", hemCovered: false },
 ];
 
-// Testing rota: each day's team comes from ONE shift
 const testingRota = [
   { date: "2026-10-17", shift: "night", people: [2, 10, 18] },
   { date: "2026-10-18", shift: "morning", people: [8, 9, 23] },
   { date: "2026-10-19", shift: "night", people: [4, 3, 17] },
 ];
 
-// Sheet state (persisted to localStorage)
-const SHEET_KEY = "hem_sheet_v1";
-let sheet = loadSheet();
+// ==============================
+// STATE (localStorage)
+// ==============================
+const STATE_KEY = "hem_app_v2";
+let state = { testerRecords: {}, mulaqatLists: {}, urduPdfs: {} };
+let currentUser = null;
+let adminDate = "2026-10-17";
 
-function loadSheet() {
+function loadState() {
   try {
-    const raw = localStorage.getItem(SHEET_KEY);
-    if (raw) return JSON.parse(raw);
+    const raw = localStorage.getItem(STATE_KEY);
+    if (raw) state = JSON.parse(raw);
   } catch (e) {}
-  // initialise blank rows
-  const rows = {};
+  // ensure testerRecords has all 34
   people.forEach(p => {
-    rows[p.testerId] = { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
+    if (!state.testerRecords[p.testerId]) {
+      state.testerRecords[p.testerId] = { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
+    }
   });
-  return rows;
+  saveState();
 }
 
-function saveSheet() {
-  localStorage.setItem(SHEET_KEY, JSON.stringify(sheet));
-  const msg = document.getElementById('save-msg');
-  msg.style.display = 'inline';
-  setTimeout(() => { msg.style.display = 'none'; }, 1500);
-  renderSheet();
+function saveState() {
+  localStorage.setItem(STATE_KEY, JSON.stringify(state));
 }
 
-function resetSheet() {
-  if (!confirm("Reset all tester log entries?")) return;
-  people.forEach(p => {
-    sheet[p.testerId] = { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
-  });
-  saveSheet();
+function emptyMulaqatRow(nr) {
+  return { nr, name: "", amount: "", start: "", end: "", arrived: false, tested: false, cleared: false, notes: "", tested2: false, tested3: false };
 }
 
-function updateField(testerId, field, value) {
-  // only allow editing your own row when logged in
-  if (!currentUser || currentUser.testerId !== testerId) return;
-  sheet[testerId][field] = value;
-  saveSheet();
+function ensureMulaqat(date) {
+  if (!state.mulaqatLists[date]) {
+    const rows = [];
+    for (let i = 1; i <= 35; i++) rows.push(emptyMulaqatRow(i));
+    state.mulaqatLists[date] = rows;
+  }
+  return state.mulaqatLists[date];
+}
+
+function durationText(start, end) {
+  if (!start || !end) return "";
+  const s = new Date(`2000-01-01T${start}`);
+  const e = new Date(`2000-01-01T${end}`);
+  let diff = (e - s) / 60000;
+  if (diff < 0) diff += 24 * 60; // overnight
+  return Math.round(diff) + " min";
+}
+
+function durationClass(start, end) {
+  if (!start || !end) return "muted";
+  const s = new Date(`2000-01-01T${start}`);
+  const e = new Date(`2000-01-01T${end}`);
+  let diff = (e - s) / 60000;
+  if (diff < 0) diff += 24 * 60;
+  const endH = e.getHours();
+  if (diff < 10) return "dur-bad";
+  if (endH >= 12) return "dur-late";
+  return "dur-ok";
 }
 
 // ==============================
 // AUTH
 // ==============================
-let currentUser = null;
-
 function checkAuth() {
   try {
-    const raw = localStorage.getItem("hem_user_v1");
+    const raw = localStorage.getItem("hem_user_v2");
     if (raw) currentUser = JSON.parse(raw);
   } catch (e) {}
   const el = document.getElementById('header-user');
   const nameEl = document.getElementById('user-name');
+  const roleEl = document.getElementById('user-role');
+  const tabLogin = document.getElementById('tab-login');
+  const tabAdmin = document.getElementById('tab-admin');
+  const tabTester = document.getElementById('tab-tester');
+
   if (currentUser) {
-    el.style.display = 'block';
+    el.style.display = 'flex';
     nameEl.textContent = currentUser.name;
-    document.getElementById('login-screen').classList.remove('active');
+    roleEl.textContent = currentUser.isAdmin ? "ADMIN" : "TESTER";
+    roleEl.className = "role " + (currentUser.isAdmin ? "badge-admin" : "badge-de");
+    tabLogin.style.display = 'none';
+    tabAdmin.style.display = currentUser.isAdmin ? 'block' : 'none';
+    tabTester.style.display = 'block';
+    document.getElementById('login').classList.remove('active');
   } else {
     el.style.display = 'none';
+    tabLogin.style.display = 'block';
+    tabAdmin.style.display = 'none';
+    tabTester.style.display = 'none';
   }
 }
 
 function doLogin() {
   const id = document.getElementById('login-id').value.trim();
   const code = document.getElementById('login-code').value.trim().toUpperCase();
+  const name = document.getElementById('login-name').value.trim();
   const err = document.getElementById('login-err');
-  const p = people.find(x => x.testerId === id && x.loginCode === code);
+  const p = people.find(x => x.testerId === id && x.loginCode === code && x.name.toLowerCase().trim() === name.toLowerCase().trim());
   if (!p) {
     err.style.display = 'block';
     return;
   }
-  currentUser = { testerId: p.testerId, name: p.name };
-  localStorage.setItem("hem_user_v1", JSON.stringify(currentUser));
+  currentUser = { testerId: p.testerId, name: p.name, isAdmin: !!p.isAdmin };
+  localStorage.setItem("hem_user_v2", JSON.stringify(currentUser));
   err.style.display = 'none';
   document.getElementById('login-id').value = '';
   document.getElementById('login-code').value = '';
+  document.getElementById('login-name').value = '';
   checkAuth();
-  show('sheet');
+  show(currentUser.isAdmin ? 'admin' : 'tester');
 }
 
 function logout() {
   currentUser = null;
-  localStorage.removeItem("hem_user_v1");
+  localStorage.removeItem("hem_user_v2");
   checkAuth();
-  show('people');
+  show('login');
 }
 
 // ==============================
-// RENDERERS
+// NAV / SHOW
 // ==============================
 function show(id) {
-  // hide login screen when navigating anywhere
-  document.getElementById('login-screen').classList.remove('active');
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.getElementById('tab-' + id).classList.add('active');
-  if (id === 'sheet') renderSheet();
+  if (id === 'people') renderPeople();
+  if (id === 'rota') renderRota();
+  if (id === 'validation') renderValidation();
+  if (id === 'admin') renderAdmin();
+  if (id === 'tester') renderTester();
 }
 
 function shiftClass(s) { return { night: 'night', morning: 'morning', day: 'day', null: 'na' }[s] || 'na'; }
 function shiftLabel(s) { if (!s) return '—'; return s.charAt(0).toUpperCase() + s.slice(1); }
 function countryClass(c) { return c === 'UK' ? 'badge-uk' : 'badge-de'; }
 
+// ==============================
+// PEOPLE / ROTA / VALIDATION (existing)
+// ==============================
 function renderPeople() {
   const tb = document.getElementById('people-body');
   tb.innerHTML = people.map((p, i) => {
     const driver = p.driver ? '<span class="badge badge-driver">🚗 Driver</span>' : '—';
     const onRota = p.hemOnRota ? '<span class="ok">✓ Yes</span>' : '<span class="flag">✗ No</span>';
     const note = p.note ? ' <span class="flag" style="font-size:0.78rem" title="' + p.note + '">!</span>' : '';
-    const codeHint = p.hemOnRota ? p.loginCode : '—';
+    const role = p.isAdmin ? '<span class="badge badge-admin">Admin</span>' : '<span class="badge badge-de">Tester</span>';
     return `<tr>
       <td class="nr">${i + 1}</td>
       <td class="name"><strong>${p.name}</strong>${note}</td>
@@ -434,7 +533,8 @@ function renderPeople() {
       <td><span class="badge badge-${shiftClass(p.shift)}">${shiftLabel(p.shift)}</span></td>
       <td>${driver}</td>
       <td><strong>${p.testerId}</strong></td>
-      <td><strong style="letter-spacing:0.05em">${codeHint}</strong></td>
+      <td><strong style="letter-spacing:0.05em">${p.loginCode}</strong></td>
+      <td>${role}</td>
       <td>${onRota}</td>
       <td>${p.note || '—'}</td>
     </tr>`;
@@ -539,44 +639,284 @@ function renderValidation() {
   }
 }
 
-function renderSheet() {
-  const subtitle = document.getElementById('sheet-subtitle');
-  const tb = document.getElementById('sheet-body');
-  const me = currentUser ? currentUser.testerId : null;
+// ==============================
+// ADMIN
+// ==============================
+function adminSetDate(d) {
+  adminDate = d;
+  if (document.getElementById('admin').classList.contains('active')) renderAdmin();
+}
 
-  subtitle.textContent = currentUser
-    ? `Signed in as ${currentUser.name} (ID ${currentUser.testerId}) — you can edit your own row only.`
-    : `Not signed in — all rows are read-only. Sign in to log your status.`;
+function renderAdmin() {
+  document.getElementById('admin-date').value = adminDate;
+  document.getElementById('admin-date-label').textContent = "Viewing: " + adminDate;
+  document.getElementById('pdf-date').textContent = adminDate;
+  document.getElementById('mulaqat-date').textContent = adminDate;
 
-  tb.innerHTML = people.map((p, i) => {
-    const row = sheet[p.testerId] || { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
-    const editable = me === p.testerId;
-    const drv = p.driver ? ' <span class="driver-chip">🚗</span>' : '';
-    const sc = shiftClass(p.shift);
-    const disabled = editable ? '' : ' disabled';
+  const rows = ensureMulaqat(adminDate);
+  const tb = document.getElementById('mulaqat-body');
+  tb.innerHTML = rows.map((r, i) => {
+    const dur = durationText(r.start, r.end);
+    const durCls = durationClass(r.start, r.end);
     const checked = (v) => v ? 'checked' : '';
-    return `<tr class="${editable ? 'own-row' : ''}">
-      <td class="nr">${i + 1}</td>
-      <td class="name"><strong>${p.name}</strong>${drv}</td>
-      <td class="shift-col"><span class="badge badge-${sc}">${shiftLabel(p.shift)}</span></td>
-      <td><input type="text" class="amount" value="${escapeHtml(row.amount)}" onchange="updateField('${p.testerId}','amount',this.value)"${disabled} placeholder="—"></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.arrived)} onchange="updateField('${p.testerId}','arrived',this.checked)"${disabled}> Arrived</label></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.tested)} onchange="updateField('${p.testerId}','tested',this.checked)"${disabled}> Tested</label></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.cleared)} onchange="updateField('${p.testerId}','cleared',this.checked)"${disabled}> Cleared</label></td>
-      <td><input type="time" class="time" value="${escapeHtml(row.start)}" onchange="updateField('${p.testerId}','start',this.value)"${disabled}></td>
-      <td><input type="time" class="time" value="${escapeHtml(row.end)}" onchange="updateField('${p.testerId}','end',this.value)"${disabled}></td>
-      <td><input type="text" class="notes" value="${escapeHtml(row.notes)}" onchange="updateField('${p.testerId}','notes',this.value)"${disabled} placeholder="Notes"></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.tested2)} onchange="updateField('${p.testerId}','tested2',this.checked)"${disabled}> Tested 2</label></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.tested3)} onchange="updateField('${p.testerId}','tested3',this.checked)"${disabled}> Tested 3</label></td>
+    const disabled = ''; // admin edits all
+    return `<tr ${r.name ? '' : 'style="opacity:0.6"'} >
+      <td class="nr">${r.nr}</td>
+      <td><input type="text" class="text" value="${escapeHtml(r.name)}" onchange="adminSetField(${i},'name',this.value)"></td>
+      <td><input type="text" class="amount" value="${escapeHtml(r.amount)}" onchange="adminSetField(${i},'amount',this.value)"></td>
+      <td><input type="time" class="time" value="${escapeHtml(r.start)}" onchange="adminSetField(${i},'start',this.value); adminDur(${i})"></td>
+      <td><input type="time" class="time" value="${escapeHtml(r.end)}" onchange="adminSetField(${i},'end',this.value); adminDur(${i})"></td>
+      <td><span id="dur-${i}" class="${durCls}">${dur}</span></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(r.arrived)} onchange="adminSetField(${i},'arrived',this.checked)"> Arrived</label></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(r.tested)} onchange="adminSetField(${i},'tested',this.checked)"> Tested</label></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(r.cleared)} onchange="adminSetField(${i},'cleared',this.checked)"> Cleared</label></td>
+      <td><input type="text" class="notes" value="${escapeHtml(r.notes)}" onchange="adminSetField(${i},'notes',this.value)"></td>
+      <td><input type="time" class="time" value="${escapeHtml(r.tested2)}" onchange="adminSetField(${i},'tested2',this.value)"></td>
+      <td><input type="time" class="time" value="${escapeHtml(r.tested3)}" onchange="adminSetField(${i},'tested3',this.value)"></td>
     </tr>`;
   }).join('');
 }
 
+function adminSetField(i, field, value) {
+  const rows = ensureMulaqat(adminDate);
+  rows[i][field] = value === "" ? false : value;
+  // coerce booleans
+  if (field === 'arrived' || field === 'tested' || field === 'cleared' || field === 'tested2' || field === 'tested3') {
+    // checkbox passes boolean already
+  }
+  saveState();
+  // refresh duration badge
+  if (field === 'start' || field === 'end') {
+    setTimeout(() => {
+      const rows2 = ensureMulaqat(adminDate);
+      const dur = durationText(rows2[i].start, rows2[i].end);
+      const el = document.getElementById('dur-' + i);
+      if (el) { el.textContent = dur; el.className = durationClass(rows2[i].start, rows2[i].end); }
+    }, 0);
+  }
+}
+
+function adminDur(i) {
+  // handled in adminSetField timeout
+}
+
+function adminSaveMulaqat() {
+  saveState();
+  const msg = document.createElement('span');
+  // show toast
+  const existing = document.getElementById('admin-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'admin-toast';
+  toast.textContent = '✓ Mulaqat list saved for ' + adminDate;
+  toast.style.cssText = 'position:fixed;top:100px;left:50%;transform:translateX(-50%);background:#15803d;color:#fff;padding:0.6rem 1rem;border-radius:6px;font-size:0.85rem;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+function adminLoadHeM() {
+  if (!confirm("Load the 34 HeM testers into today's mulaqat list? This replaces names 1–34.")) return;
+  const rows = ensureMulaqat(adminDate);
+  people.forEach((p, i) => {
+    if (i < 35) {
+      rows[i].nr = i + 1;
+      rows[i].name = p.name;
+      // keep existing times/flags if already set, only fill name
+    }
+  });
+  saveState();
+  renderAdmin();
+}
+
+function adminClearMulaqat() {
+  if (!confirm("Clear all entries for " + adminDate + "?")) return;
+  state.mulaqatLists[adminDate] = [];
+  for (let i = 1; i <= 35; i++) state.mulaqatLists[adminDate].push(emptyMulaqatRow(i));
+  saveState();
+  renderAdmin();
+}
+
+// ==============================
+// URDU PDFS (admin)
+// ==============================
+function adminUploadPdf(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.type !== 'application/pdf') {
+    alert('Please upload a PDF file.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    if (!state.urduPdfs[adminDate]) state.urduPdfs[adminDate] = [];
+    state.urduPdfs[adminDate].push({ name: file.name, size: file.size, dataUrl });
+    saveState();
+    renderAdminPdfs();
+    input.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderAdminPdfs() {
+  const list = document.getElementById('pdf-list');
+  const items = state.urduPdfs[adminDate] || [];
+  if (items.length === 0) {
+    list.innerHTML = '<p class="muted">No Urdu PDFs uploaded for this date yet.</p>';
+    return;
+  }
+  list.innerHTML = items.map((p, i) => {
+    const mb = (p.size / 1024 / 1024).toFixed(2);
+    return `<div class="pdf-item">
+      <div>
+        <div class="name">${escapeHtml(p.name)}</div>
+        <div class="size">${mb} MB</div>
+      </div>
+      <div class="actions">
+        <button onclick="adminViewPdf(${i})" title="View in new tab">View</button>
+        <button onclick="adminDownloadPdf(${i})" title="Download">Download</button>
+        <button onclick="adminDeletePdf(${i})" class="danger" title="Delete">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function adminViewPdf(i) {
+  const items = state.urduPdfs[adminDate] || [];
+  const p = items[i];
+  window.open(p.dataUrl, '_blank');
+}
+
+function adminDownloadPdf(i) {
+  const items = state.urduPdfs[adminDate] || [];
+  const p = items[i];
+  const a = document.createElement('a');
+  a.href = p.dataUrl;
+  a.download = p.name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function adminDeletePdf(i) {
+  if (!confirm("Delete this PDF?")) return;
+  const items = state.urduPdfs[adminDate] || [];
+  items.splice(i, 1);
+  saveState();
+  renderAdminPdfs();
+}
+
+// ==============================
+// TESTER
+// ==============================
+function renderTester() {
+  const me = currentUser.testerId;
+  const p = people.find(x => x.testerId === me);
+  document.getElementById('tester-welcome').textContent = "Welcome, " + p.name + " (ID " + me + ").";
+  document.getElementById('tester-role-badge').textContent = currentUser.isAdmin ? " " : "";
+  document.getElementById('tester-role-badge').className = currentUser.isAdmin ? "badge badge-admin" : "badge badge-de";
+  document.getElementById('tester-role-badge').textContent = currentUser.isAdmin ? "Admin" : "Tester";
+
+  // Own HeM tester record (editable)
+  const rec = state.testerRecords[me] || { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
+  const trow = document.getElementById('tester-own-table');
+  const dur = durationText(rec.start, rec.end);
+  trow.innerHTML = `
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Shift</th><th>Amount</th><th>Start Time</th><th>End Time</th><th>Duration</th><th>Arrived</th><th>Tested</th><th>Cleared</th><th>Notes</th><th>Tested 2</th><th>Tested 3</th></tr>
+      </thead>
+      <tbody>
+        <tr class="own-row">
+          <td class="name">${p.name}</td>
+          <td><span class="badge badge-${shiftClass(p.shift)}">${shiftLabel(p.shift)}</span></td>
+          <td><input type="text" class="amount" value="${escapeHtml(rec.amount)}" onchange="testerSet('amount',this.value)"></td>
+          <td><input type="time" class="time" value="${escapeHtml(rec.start)}" onchange="testerSet('start',this.value); testerDur()"></td>
+          <td><input type="time" class="time" value="${escapeHtml(rec.end)}" onchange="testerSet('end',this.value); testerDur()"></td>
+          <td><span id="tester-dur" class="${durationClass(rec.start, rec.end)}">${dur}</span></td>
+          <td><label class="cb-wrap"><input type="checkbox" ${rec.arrived ? 'checked' : ''} onchange="testerSet('arrived',this.checked)"> Arrived</label></td>
+          <td><label class="cb-wrap"><input type="checkbox" ${rec.tested ? 'checked' : ''} onchange="testerSet('tested',this.checked)"> Tested</label></td>
+          <td><label class="cb-wrap"><input type="checkbox" ${rec.cleared ? 'checked' : ''} onchange="testerSet('cleared',this.checked)"> Cleared</label></td>
+          <td><input type="text" class="notes" value="${escapeHtml(rec.notes)}" onchange="testerSet('notes',this.value)"></td>
+          <td><input type="time" class="time" value="${escapeHtml(rec.tested2)}" onchange="testerSet('tested2',this.value)"></td>
+          <td><input type="time" class="time" value="${escapeHtml(rec.tested3)}" onchange="testerSet('tested3',this.value)"></td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+
+  // Today's mulaqat list (read-only for tester)
+  const d = adminDate; // show same date context as admin default; use today's mulaqat
+  // Use the currently selected admin date for context
+  const mulaqatDate = adminDate;
+  document.getElementById('tester-mulaqat-date').textContent = mulaqatDate;
+  const rows = ensureMulaqat(mulaqatDate);
+  const mbody = document.getElementById('tester-mulaqat-table');
+  mbody.innerHTML = `
+    <table>
+      <thead>
+        <tr><th>Nr</th><th>Name</th><th>Amount</th><th>Start</th><th>End</th><th>Arrived</th><th>Tested</th><th>Cleared</th><th>Notes</th><th>Tested 2</th><th>Tested 3</th></tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => {
+          const mine = r.name.toLowerCase().trim() === p.name.toLowerCase().trim();
+          const checked = (v) => v ? 'checked' : '';
+          return `<tr ${mine ? 'class="own-row"' : ''}>
+            <td class="nr">${r.nr}</td>
+            <td class="name">${escapeHtml(r.name) || '—'}</td>
+            <td>${escapeHtml(r.amount) || '—'}</td>
+            <td>${escapeHtml(r.start) || '—'}</td>
+            <td>${escapeHtml(r.end) || '—'}</td>
+            <td>${r.arrived ? '<span class="ok">✓</span>' : '<span class="flag">✗</span>'}</td>
+            <td>${r.tested ? '<span class="ok">✓</span>' : '<span class="flag">✗</span>'}</td>
+            <td>${r.cleared ? '<span class="ok">✓</span>' : '<span class="flag">✗</span>'}</td>
+            <td>${escapeHtml(r.notes) || '—'}</td>
+            <td>${escapeHtml(r.tested2) || '—'}</td>
+            <td>${escapeHtml(r.tested3) || '—'}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    ${rows.some(r => r.name.toLowerCase().trim() === p.name.toLowerCase().trim()) ? '' : '<p class="muted">Your name is not on today's mulaqat list — please use "Your HeM Tester Record" above.</p>'
+  }`;
+}
+
+function testerSet(field, value) {
+  const me = currentUser.testerId;
+  if (!state.testerRecords[me]) state.testerRecords[me] = { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
+  state.testerRecords[me][field] = value;
+  saveState();
+  if (field === 'start' || field === 'end') {
+    setTimeout(testerDur, 0);
+  }
+}
+
+function testerDur() {
+  const me = currentUser.testerId;
+  const rec = state.testerRecords[me] || {};
+  const dur = durationText(rec.start, rec.end);
+  const el = document.getElementById('tester-dur');
+  if (el) { el.textContent = dur; el.className = durationClass(rec.start, rec.end); }
+}
+
+function testerSaveOwn() {
+  saveState();
+  const toast = document.createElement('div');
+  toast.textContent = '✓ Your record saved';
+  toast.style.cssText = 'position:fixed;top:100px;left:50%;transform:translateX(-50%);background:#0b3d62;color:#fff;padding:0.6rem 1rem;border-radius:6px;font-size:0.85rem;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ==============================
+// HELPERS
+// ==============================
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[c]); }
 
 // ==============================
 // INIT
 // ==============================
+loadState();
 checkAuth();
 renderPeople();
 renderRota();
