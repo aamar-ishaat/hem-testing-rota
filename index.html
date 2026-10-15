@@ -3,76 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fdfbf7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <title>HeM Testing — Dashboard</title>
 <style>
-  /* ---------- Soft dashboard design tokens ---------- */
+  /* ---------- Design tokens ---------- */
   :root {
-    --bg: #fdfaf5;
+    --bg: #f8fafc;
     --card: #ffffff;
-    --line: #efe9e0;
-    --ink: #2d2b2a;
-    --muted: #8a7f75;
-    --primary: #6d5a4a;
-    --primaryHover: #5a493c;
-    --accentBlue: #7aa3c7;
-    --accentOrange: #e8a05d;
-    --accentGreen: #8fb58f;
-    --accentPurple: #b39aa3;
-    --success: #7fa37f;
-    --danger: #b97a7a;
-    --warn: #c98a57;
-    --radius: 22px;
-    --shadow: 0 10px 30px -10px rgba(45,43,42,0.08), 0 4px 12px -4px rgba(45,43,42,0.04);
+    --border: #e2e8f0;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --primary: #1d4ed8;
+    --primaryHover: #1e40af;
+    --success: #059669;
+    --danger: #dc2626;
+    --warn: #d97706;
+    --radius: 16px;
+    --shadow: 0 10px 30px -10px rgba(30,41,59,0.08), 0 4px 12px -4px rgba(30,41,59,0.04);
+  }
+
+  body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --ink: #f1f5f9;
+    --muted: #94a3b8;
+    --primary: #3b82f6;
+    --primaryHover: #60a5fa;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warn: #f59e0b;
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html { font-size: 16px; }
-  body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; -webkit-font-smoothing: antialiased; transition: background 0.3s ease; }
 
   /* ---------- App shell ---------- */
   .app { display: flex; height: 100vh; overflow: hidden; }
-  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 230px; background: var(--card); border-right: 1px solid var(--line); z-index: 50; display: flex; flex-direction: column; transition: transform 0.25s ease; transform: translateX(0); box-shadow: var(--shadow); }
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: var(--card); border-right: 1px solid var(--border); z-index: 50; display: flex; flex-direction: column; transition: transform 0.25s ease; transform: translateX(0); box-shadow: var(--shadow); }
   @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } }
-  .sidebar-header { height: 60px; display: flex; align-items: center; gap: 11px; padding: 0 18px; border-bottom: 1px solid var(--line); }
-  .sidebar-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--primary); display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 14px; box-shadow: 0 4px 10px -4px rgba(109,90,74,0.35); }
-  .sidebar-title { font-size: 1.1rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink); }
+  .sidebar-header { height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+  .sidebar-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--primary); display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 14px; box-shadow: 0 4px 10px -4px rgba(29,78,216,0.35); }
+  .sidebar-title { font-size: 1.1rem; font-weight: 900; letter-spacing: -0.02em; }
 
   .nav { padding: 16px 10px; flex: 1; overflow-y: auto; }
-  .nav-item { display: flex; align-items: center; gap: 11px; padding: 10px 14px; border-radius: 14px; color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 700; margin: 0 6px 4px 6px; cursor: pointer; border: 1px solid transparent; transition: all 0.18s ease; white-space: nowrap; }
-  .nav-item .ic { width: 20px; text-align: center; flex-shrink: 0; font-size: 1rem; }
-  .nav-item:hover { background: #f5efe6; color: var(--ink); border-color: #ddd5c7; }
-  .nav-item.active { background: #eef3ea; color: var(--accentGreen); border-color: #d9e3d9; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 700; margin: 0 6px 4px 6px; cursor: pointer; border: 1px solid transparent; transition: all 0.18s ease; white-space: nowrap; }
+  .nav-item .ic { width: 20px; text-align: center; flex-shrink: 0; }
+  .nav-item:hover { background: #f1f5f9; color: var(--ink); border-color: #cbd5e1; }
+  body.dark .nav-item:hover { background: #334155; color: var(--ink); border-color: #475569; }
+  .nav-item.active { background: #dbeafe; color: var(--primary); border-color: #bfdbfe; }
+  body.dark .nav-item.active { background: #1e3a8a; color: #bfdbfe; border-color: #3b82f6; }
   .nav-item.admin-only { display: none; }
   body.is-admin .nav-item.admin-only { display: flex; }
 
-  .sidebar-footer { padding: 16px 18px; border-top: 1px solid var(--line); margin-top: auto; }
-  .role-pill { display: inline-block; padding: 5px 12px; border-radius: 12px; background: #f5efe6; color: var(--primary); font-size: 0.72rem; font-weight: 900; border: 1px solid #ddd5c7; margin-bottom: 10px; }
-  .btn-signout { width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); color: var(--ink); font-weight: 800; font-size: 0.88rem; cursor: pointer; text-align: left; transition: 0.18s; }
-  .btn-signout:hover { background: #fdeeee; border-color: #e7c7c7; color: var(--danger); }
+  .sidebar-footer { padding: 16px 18px; border-top: 1px solid var(--border); margin-top: auto; }
+  .role-pill { display: inline-block; padding: 5px 12px; border-radius: 12px; background: #dbeafe; color: var(--primary); font-size: 0.72rem; font-weight: 900; border: 1px solid #bfdbfe; margin-bottom: 10px; }
+  body.dark .role-pill { background: #1e3a8a; color: #bfdbfe; border-color: #3b82f6; }
+  .btn-signout { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--ink); font-weight: 800; font-size: 0.88rem; cursor: pointer; text-align: left; transition: 0.18s; }
+  .btn-signout:hover { background: #fef2f2; border-color: #fecaca; color: var(--danger); }
 
   .main { flex: 1; min-height: 100vh; overflow-y: auto; padding-bottom: 44px; position: relative; }
   @media (max-width: 768px) { .main { width: 100vw; } }
 
   /* ---------- Topbar ---------- */
-  .topbar { position: sticky; top: 0; z-index: 40; background: rgba(253,250,245,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 0 16px 0 246px; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .topbar { position: sticky; top: 0; z-index: 40; background: rgba(248,250,252,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 16px 0 256px; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  body.dark .topbar { background: rgba(15,23,42,0.85); }
   @media (max-width: 768px) { .topbar { padding-left: 52px; } }
   .topbar-left { display: flex; align-items: center; gap: 12px; }
-  .btn-menu { width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); display: grid; place-items: center; color: var(--ink); cursor: pointer; font-size: 18px; line-height: 1; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.06); }
+  .btn-menu { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); display: grid; place-items: center; color: var(--ink); cursor: pointer; font-size: 18px; line-height: 1; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.06); }
   .topbar h1 { margin: 0; font-size: 1.25rem; font-weight: 900; letter-spacing: -0.01em; color: var(--ink); }
   .topbar-right { display: flex; align-items: center; gap: 10px; }
   .search { position: relative; flex: 1; max-width: 430px; margin-left: 18px; }
-  .search input { width: 100%; padding: 10px 16px 10px 44px; border: 1px solid var(--line); border-radius: 14px; background: #f7f1e7; color: var(--ink); font-size: 0.88rem; }
-  .search input:focus { border-color: var(--accentBlue); outline: none; background: #fff; }
-  .search::before { content: "\1F50D"; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--muted); }
-  .btn-create { padding: 10px 18px; border: 1px solid transparent; border-radius: 14px; background: var(--primary); color: #fff; font-weight: 800; font-size: 0.88rem; cursor: pointer; box-shadow: 0 6px 14px -6px rgba(109,90,74,0.3); }
+  .search input { width: 100%; padding: 10px 16px 10px 44px; border: 1px solid var(--border); border-radius: 14px; background: #f1f5f9; color: var(--ink); font-size: 0.88rem; }
+  body.dark .search input { background: #334155; border-color: #475569; color: var(--ink); }
+  .search input:focus { border-color: var(--primary); outline: none; background: #fff; }
+  body.dark .search input:focus { background: var(--card); }
+  .search::before { content: ""; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2364748b"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="2"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="2"/></svg>') center/contain no-repeat; }
+  .btn-create { padding: 10px 18px; border: 1px solid transparent; border-radius: 14px; background: var(--primary); color: #fff; font-weight: 800; font-size: 0.88rem; cursor: pointer; box-shadow: 0 6px 14px -6px rgba(29,78,216,0.3); }
+  body.dark .btn-create { box-shadow: 0 6px 14px -6px rgba(59,130,246,0.35); }
   .btn-create:hover { background: var(--primaryHover); transform: translateY(-1px); }
-  .icon-btn { width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); display: grid; place-items: center; color: var(--muted); cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
-  .icon-btn:hover { background: #f5efe6; color: var(--ink); border-color: #ddd5c7; }
-  .avatar { width: 36px; height: 36px; border-radius: 50%; background: #ddd5c7; display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 0.9rem; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
+  .icon-btn { width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); display: grid; place-items: center; color: var(--muted); cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
+  .icon-btn:hover { background: #f1f5f9; color: var(--ink); border-color: #cbd5e1; }
+  body.dark .icon-btn:hover { background: #334155; border-color: #475569; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--muted); display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 0.9rem; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-  .backdrop { position: fixed; inset: 0; background: rgba(45,43,42,0.3); z-index: 45; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+  .backdrop { position: fixed; inset: 0; background: rgba(30,41,59,0.3); z-index: 45; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
   .backdrop.show { opacity: 1; pointer-events: auto; }
 
   /* ---------- Content ---------- */
@@ -85,9 +102,9 @@
   .page-sub { color: var(--muted); font-size: 0.92rem; margin: 0; }
 
   /* cards */
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
   .card-body { padding: 24px; }
-  .card-header { padding: 18px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
   .card-title { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0; display: flex; align-items: center; gap: 8px; }
 
   /* grid */
@@ -95,9 +112,11 @@
   @media (max-width: 1100px) { .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 600px) { .grid4 { grid-template-columns: 1fr; } }
 
-  .stat { background: #f7f1e7; border: 1px solid var(--line); border-radius: 20px; padding: 20px 18px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
-  .stat::after { content: ""; position: absolute; right: -30px; top: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.5); border-radius: 50%; blur: 20px; }
-  .stat .ic { width: 48px; height: 48px; border-radius: 14px; background: #ffffff; color: var(--primary); display: grid; place-items: center; font-size: 22px; flex-shrink: 0; border: 1px solid var(--line); box-shadow: 0 6px 14px -6px rgba(0,0,0,0.05); }
+  .stat { background: #f1f5f9; border: 1px solid var(--border); border-radius: 20px; padding: 20px 18px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
+  body.dark .stat { background: #334155; }
+  .stat::after { content: ""; position: absolute; right: -30px; top: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.04); border-radius: 50%; }
+  .stat .ic { width: 48px; height: 48px; border-radius: 14px; background: #ffffff; color: var(--primary); display: grid; place-items: center; font-size: 22px; flex-shrink: 0; border: 1px solid var(--border); box-shadow: 0 6px 14px -6px rgba(0,0,0,0.05); }
+  body.dark .stat .ic { background: #475569; border-color: var(--border); }
   .stat .txt { flex: 1; }
   .stat .big { font-size: 2rem; font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); }
   .stat .cap { font-size: 0.78rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
@@ -108,9 +127,11 @@
   /* tables */
   table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
   th { text-align: left; padding: 12px 14px; font-size: 0.72rem; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid #f3ece0; white-space: nowrap; vertical-align: bottom; }
-  td { padding: 12px 14px; border-bottom: 1px solid #f3ece0; vertical-align: top; }
+  td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  body.dark td { border-bottom-color: #334155; }
   tr:last-child td { border-bottom: none; }
-  tr:hover { background: #f7f1e7; }
+  tr:hover { background: #f8fafc; }
+  body.dark tr:hover { background: #334155; }
   tr.own-row { background: #fff7e8; border-left: 5px solid var(--warn); }
   tr.own-row td { border-color: #f3d9b4; }
   td.nr { font-weight: 900; color: var(--ink); width: 40px; }
@@ -120,15 +141,15 @@
 
   /* badges */
   .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.74rem; font-weight: 900; white-space: nowrap; border: 1px solid transparent; }
-  .badge-night { background: #dce6f7; color: #3d5a98; border-color: #cdd8ec; }
+  .badge-night { background: #dbeafe; color: #1e3a8a; border-color: #bfdbfe; }
   .badge-morning { background: #ddf7e3; color: #3b7a55; border-color: #cde9cf; }
   .badge-day { background: #fdeeda; color: #a86922; border-color: #f9dbb2; }
   .badge-na { background: #e8e6e2; color: #6e665d; border-color: #ddd7ca; }
   .badge-uk { background: #f9dede; color: #a04a4a; border-color: #f2c9c9; }
   .badge-de { background: #e6eafc; color: #5b5a98; border-color: #d7daef; }
-  .badge-admin { background: var(--primary); color: #fff; border-color: #5a493c; }
+  .badge-admin { background: var(--primary); color: #fff; border-color: #1e40af; }
   .badge-test { background: #f0ece4; color: #7e7469; border-color: #e0d7c9; }
-  .badge-driver { font-size: 0.7rem; padding: 3px 10px; border-radius: 8px; background: #e8a05d; color: #fff; }
+  .badge-driver { font-size: 0.7rem; padding: 3px 10px; border-radius: 8px; background: #d97706; color: #fff; }
 
   .ok { color: var(--success); font-weight: 900; font-size: 0.84rem; }
   .flag { color: var(--danger); font-weight: 900; font-size: 0.84rem; }
@@ -136,27 +157,32 @@
   .muted { color: var(--muted); font-size: 0.88rem; }
 
   /* driver chip */
-  .driver-chip { font-size: 0.68rem; padding: 3px 10px; border-radius: 8px; background: #e8a05d; color: #fff; }
+  .driver-chip { font-size: 0.68rem; padding: 3px 10px; border-radius: 8px; background: #d97706; color: #fff; }
 
   /* checkbox / inputs */
   .cb-wrap { display: flex; align-items: center; gap: 9px; justify-content: center; }
   .cb-wrap input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
-  input.time { width: 100px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
-  input.time:focus { border-color: var(--accentBlue); outline: none; }
-  input.notes { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
-  input.notes:focus { border-color: var(--accentBlue); outline: none; }
-  input.amount { width: 90px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); text-align: right; }
-  input.amount:focus { border-color: var(--accentBlue); outline: none; }
-  input.text { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
-  input.text:focus { border-color: var(--accentBlue); outline: none; }
+  input.time { width: 100px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
+  body.dark input.time { background: #334155; border-color: #475569; color: var(--ink); }
+  input.time:focus { border-color: var(--primary); outline: none; }
+  input.notes { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
+  body.dark input.notes { background: #334155; border-color: #475569; color: var(--ink); }
+  input.notes:focus { border-color: var(--primary); outline: none; }
+  input.amount { width: 90px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); text-align: right; }
+  body.dark input.amount { background: #334155; border-color: #475569; color: var(--ink); }
+  input.amount:focus { border-color: var(--primary); outline: none; }
+  input.text { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
+  body.dark input.text { background: #334155; border-color: #475569; color: var(--ink); }
+  input.text:focus { border-color: var(--primary); outline: none; }
 
   /* buttons */
-  .btn { border: 1px solid var(--line); border-radius: 14px; background: var(--card); color: var(--ink); font-weight: 800; font-size: 0.86rem; padding: 9px 16px; cursor: pointer; transition: all 0.18s ease; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
-  .btn:hover { border-color: #ddd5c7; background: #f7f1e7; transform: translateY(-1px); }
-  .btn.primary { background: var(--primary); color: #fff; border-color: #5a493c; }
-  .btn.primary:hover { background: var(--primaryHover); border-color: #4a3d30; }
-  .btn.danger { background: #fdeeee; color: var(--danger); border-color: #e7c7c7; }
-  .btn.danger:hover { background: #f6cfcf; }
+  .btn { border: 1px solid var(--border); border-radius: 14px; background: var(--card); color: var(--ink); font-weight: 800; font-size: 0.86rem; padding: 9px 16px; cursor: pointer; transition: all 0.18s ease; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
+  .btn:hover { border-color: #cbd5e1; background: #f8fafc; transform: translateY(-1px); }
+  body.dark .btn:hover { background: #334155; border-color: #475569; }
+  .btn.primary { background: var(--primary); color: #fff; border-color: #1e40af; }
+  .btn.primary:hover { background: var(--primaryHover); border-color: #1e40af; }
+  .btn.danger { background: #fef2f2; color: var(--danger); border-color: #fecaca; }
+  .btn.danger:hover { background: #fecaca; }
   .btn.sm { padding: 6px 11px; font-size: 0.8rem; }
   .btn.secondary { background: #f0ece4; color: #7e7469; border-color: #e0d7c9; }
 
@@ -164,67 +190,85 @@
   .save-msg { font-size: 0.84rem; color: var(--success); font-weight: 900; }
 
   /* PDF */
-  .pdf-upload { border: 2px dashed #ddd5c7; border-radius: 18px; padding: 24px; text-align: center; cursor: pointer; transition: 0.18s; margin-bottom: 14px; background: #fbf8f3; }
-  .pdf-upload:hover { border-color: var(--accentBlue); background: #f2f6fb; }
+  .pdf-upload { border: 2px dashed var(--border); border-radius: 18px; padding: 24px; text-align: center; cursor: pointer; transition: 0.18s; margin-bottom: 14px; background: #f8fafc; }
+  body.dark .pdf-upload { background: #1e293b; }
+  .pdf-upload:hover { border-color: var(--primary); background: #eff6ff; }
+  body.dark .pdf-upload:hover { background: #1e3a8a; }
   .pdf-upload input { display: none; }
-  .pdf-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; background: #fbf8f3; }
+  .pdf-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; background: #f8fafc; }
+  body.dark .pdf-item { background: #1e293b; }
   .pdf-item .meta { flex: 1; }
   .pdf-item .fname { font-weight: 900; font-size: 0.9rem; color: var(--ink); }
   .pdf-item .fsize { font-size: 0.8rem; color: var(--muted); }
   .pdf-actions { display: flex; gap: 8px; }
-  .pdf-actions button { padding: 6px 12px; font-size: 0.82rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; }
+  .pdf-actions button { padding: 6px 12px; font-size: 0.82rem; border: 1px solid var(--border); border-radius: 10px; background: #fff; cursor: pointer; }
   .pdf-actions button:hover { border-color: var(--primary); color: var(--primary); }
 
   /* legend */
   .legend { display: flex; flex-wrap: wrap; gap: 10px 16px; font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
   .legend span { display: flex; align-items: center; gap: 7px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot-night { background: #3d5a98; }
+  .dot-night { background: #1e3a8a; }
   .dot-morning { background: #3b7a55; }
   .dot-day { background: #a86922; }
-  .dot-na { background: #9e968c; }
+  .dot-na { background: #94a3b8; }
 
   /* login */
   .login-wrap { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 30px; background: var(--bg); }
-  .login-card { background: var(--card); border: 1px solid var(--line); border-radius: 30px; padding: 44px 40px; width: 100%; max-width: 440px; box-shadow: var(--shadow); }
+  .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 30px; padding: 44px 40px; width: 100%; max-width: 440px; box-shadow: var(--shadow); }
   .login-card .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
   .login-card h2 { margin: 0 0 8px 0; font-size: 1.5rem; font-weight: 900; letter-spacing: -0.01em; color: var(--ink); }
   .login-card p { margin: 0 0 26px 0; font-size: 0.95rem; color: var(--muted); }
   .login-card .err { color: var(--danger); font-size: 0.86rem; margin-bottom: 18px; display: none; }
   .login-card label { display: block; font-size: 0.78rem; font-weight: 900; margin-bottom: 6px; color: var(--ink); text-transform: uppercase; letter-spacing: 0.04em; }
-  .login-card input { width: 100%; padding: 11px 16px; border: 1px solid var(--line); border-radius: 14px; font-size: 1rem; background: #fbf8f3; color: var(--ink); margin-bottom: 16px; }
-  .login-card input:focus { border-color: var(--accentBlue); outline: none; background: #fff; }
-  .login-card button { width: 100%; padding: 12px; border: none; border-radius: 14px; background: var(--primary); color: #fff; font-size: 1.05rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 14px -6px rgba(109,90,74,0.3); }
+  .login-card input { width: 100%; padding: 11px 16px; border: 1px solid var(--border); border-radius: 14px; font-size: 1rem; background: #f8fafc; color: var(--ink); margin-bottom: 16px; }
+  body.dark .login-card input { background: #1e293b; border-color: #334155; color: var(--ink); }
+  .login-card input:focus { border-color: var(--primary); outline: none; background: #fff; }
+  body.dark .login-card input:focus { background: var(--card); }
+  .login-card button { width: 100%; padding: 12px; border: none; border-radius: 14px; background: var(--primary); color: #fff; font-size: 1.05rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 14px -6px rgba(29,78,216,0.3); }
+  body.dark .login-card button { box-shadow: 0 6px 14px -6px rgba(59,130,246,0.35); }
   .login-card button:hover { background: var(--primaryHover); transform: translateY(-1px); }
-  .login-card .hint { margin-top: 22px; font-size: 0.82rem; color: var(--muted); border-top: 1px solid #f3ece0; padding-top: 16px; }
+  .login-card .hint { margin-top: 22px; font-size: 0.82rem; color: var(--muted); border-top: 1px solid #e2e8f0; padding-top: 16px; }
 
-  .empty { text-align: center; color: var(--muted); padding: 50px; font-size: 0.95rem; border-radius: 20px; background: #fbf8f3; border: 1px dashed var(--line); }
+  .empty { text-align: center; color: var(--muted); padding: 50px; font-size: 0.95rem; border-radius: 20px; background: #f8fafc; border: 1px dashed var(--line); }
+  body.dark .empty { background: #1e293b; }
 
   /* rota chips */
-  .rota-day { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
+  .rota-day { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
   .rota-day h3 { margin: 0 0 12px; font-size: 1.1rem; font-weight: 900; display: flex; justify-content: space-between; align-items: baseline; color: var(--ink); }
   .rota-team { display: flex; gap: 10px; flex-wrap: wrap; }
-  .person-chip { padding: 9px 14px; border-radius: 14px; background: #f7f1e7; border: 1px solid var(--line); font-size: 0.92rem; font-weight: 800; color: var(--ink); display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.04); }
-  .person-chip.driver { border: 2px solid #e8a05d; background: #fff7e8; }
-  .person-chip .shift-tag { font-size: 0.68rem; font-weight: 900; text-transform: uppercase; padding: 2px 9px; border-radius: 8px; background: #e2d8cb; color: #7e7469; }
-  .night .shift-tag { background: #dce6f7; color: #3d5a98; }
+  .person-chip { padding: 9px 14px; border-radius: 14px; background: #f8fafc; border: 1px solid var(--line); font-size: 0.92rem; font-weight: 800; color: var(--ink); display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.04); }
+  body.dark .person-chip { background: #334155; border-color: #475569; color: var(--ink); }
+  .person-chip.driver { border: 2px solid #d97706; background: #fff7e8; }
+  .person-chip .shift-tag { font-size: 0.68rem; font-weight: 900; text-transform: uppercase; padding: 2px 9px; border-radius: 8px; background: #e2e8f0; color: #64748b; }
+  .night .shift-tag { background: #dbeafe; color: #1e3a8a; }
   .morning .shift-tag { background: #ddf7e3; color: #3b7a55; }
   .day .shift-tag { background: #fdeeda; color: #a86922; }
 
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 18px; }
-  .stat2 { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+  .stat2 { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; }
   .stat2 .big { font-size: 1.8rem; font-weight: 900; color: var(--primary); }
   .stat2 .cap { font-size: 0.78rem; color: var(--muted); margin-top: 5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; }
 
-  .admin-only-section { border: 1px dashed #ddd5c7; border-radius: 16px; background: #fbf8f3; padding: 16px; margin-top: 14px; }
+  .admin-only-section { border: 1px dashed var(--border); border-radius: 16px; background: #f8fafc; padding: 16px; margin-top: 14px; }
+  body.dark .admin-only-section { background: #1e293b; }
 
   /* date picker */
   .date-picker-wrap { display: flex; align-items: center; gap: 12px; }
   .date-picker-wrap label { font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-right: 6px; }
-  .date-picker-wrap input[type=date] { padding: 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: #fbf8f3; font-size: 0.9rem; font-weight: 700; color: var(--ink); cursor: pointer; }
-  .date-picker-wrap input[type=date]::-webkit-calendar-picker-indicator { filter: opacity(0.6); cursor: pointer; }
+  .date-picker-wrap input[type=date] { padding: 10px 14px; border: 1px solid var(--border); border-radius: 14px; background: #f8fafc; font-size: 0.9rem; font-weight: 700; color: var(--ink); cursor: pointer; }
+  body.dark .date-picker-wrap input[type=date] { background: #1e293b; border-color: #334155; color: var(--ink); }
 
-  /* admin-only hint */
+  /* theme toggle */
+  .theme-toggle { width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); display: grid; place-items: center; color: var(--muted); cursor: pointer; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
+  .theme-toggle:hover { background: #f1f5f9; border-color: #cbd5e1; }
+  body.dark .theme-toggle:hover { background: #334155; border-color: #475569; }
+
+  /* storage info */
+  .storage-info { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin-top: 16px; font-size: 0.82rem; color: #1e3a8a; }
+  body.dark .storage-info { background: #1e3a8a; border-color: #3b82f6; color: #bfdbfe; }
+
+  svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -248,13 +292,22 @@
   <div class="main">
     <div class="topbar">
       <div class="topbar-left">
-        <button class="btn-menu" onclick="toggleSidebar()">☰</button>
+        <button class="btn-menu" onclick="toggleSidebar()">
+          <svg class="ic" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
         <h1 id="topbar-title">Dashboard</h1>
         <div class="search"><input type="text" placeholder="Search anything..."></div>
       </div>
       <div class="topbar-right">
-        <button class="icon-btn" title="Notifications">🔔</button>
-        <button class="icon-btn" title="Messages">💬</button>
+        <button class="icon-btn" title="Notifications" onclick="show('dashboard')">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18c-3-2-3-9-3-9Z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <button class="icon-btn" title="Messages" onclick="show('validation-page')">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode" onclick="toggleTheme()">
+          <svg class="ic" id="theme-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        </button>
         <div class="avatar" id="avatar" title="Profile"></div>
       </div>
     </div>
@@ -270,7 +323,7 @@
             </div>
             <h2>Sign in</h2>
             <p>Enter your Tester ID, code and name.</p>
-            <div class="err" id="login-err">Invalid ID, code or name. Please try again.</div>
+            <div class="err" id="login-err">Invalid ID, code or name.</div>
             <label>Tester ID</label>
             <input type="text" id="login-id" placeholder="e.g. 04" maxlength="2">
             <label>Code</label>
@@ -291,7 +344,7 @@
             <p class="page-sub" id="dash-sub">Welcome back</p>
           </div>
           <div style="display:flex;gap:10px">
-            <button class="btn primary" onclick="currentUser.isAdmin ? show('mulaqat') : show('tester')">📋 Mulaqat Log</button>
+            <button class="btn primary" onclick="currentUser.isAdmin ? show('mulaqat') : show('tester')">Mulaqat Log</button>
           </div>
         </div>
 
@@ -301,13 +354,17 @@
           <div class="card-body">
             <h3 style="margin:0 0 12px 0;font-size:1rem;font-weight:900;letter-spacing:-0.01em">Quick actions</h3>
             <div class="bar" style="margin-bottom:0">
-              <button class="btn primary" onclick="currentUser.isAdmin ? show('mulaqat') : show('tester')">📋 Mulaqat Log</button>
-              <button class="btn" onclick="show('people-page')">👥 People</button>
-              <button class="btn" onclick="show('rota-page')">🗓️ Rota 17–19 Oct</button>
-              <button class="btn" onclick="show('validation-page')">⚠️ Validation</button>
-              <button class="btn admin-only" onclick="show('pdfs')">📎 Urdu PDFs</button>
+              <button class="btn primary" onclick="currentUser.isAdmin ? show('mulaqat') : show('tester')">Mulaqat Log</button>
+              <button class="btn" onclick="show('people-page')">People</button>
+              <button class="btn" onclick="show('rota-page')">Rota 17–19 Oct</button>
+              <button class="btn" onclick="show('validation-page')">Validation</button>
+              <button class="btn admin-only" onclick="show('pdfs')">Urdu PDFs</button>
             </div>
           </div>
+        </div>
+
+        <div class="storage-info">
+          <strong>Where is data saved?</strong> All tester records, mulaqat lists, and uploaded PDFs are stored in your browser's localStorage on this device. Nothing is sent to a server. To move data to a SQL database or cloud, you would need to add a backend and connect it here.
         </div>
       </section>
 
@@ -319,7 +376,7 @@
             <p class="page-sub" id="mulaqat-sub"></p>
           </div>
           <div style="display:flex;gap:10px">
-            <button class="btn primary" id="btn-save-mulaqat" onclick="saveMulaqat()" style="display:none">✓ Save</button>
+            <button class="btn primary" id="btn-save-mulaqat" onclick="saveMulaqat()" style="display:none">Save</button>
             <button class="btn" onclick="loadHemTesters()">Load 34 HeM Testers</button>
             <button class="btn danger" onclick="clearMulaqat()">Clear Today</button>
           </div>
@@ -372,7 +429,7 @@
           <input type="date" id="pdf-date" onchange="setPdfDate(this.value)" value="2026-10-17">
         </div>
         <div class="pdf-upload" onclick="document.getElementById('pdf-file').click()">
-          <p style="margin:0 0 6px 0;font-weight:900;font-size:0.95rem;color:var(--primary)">📎 Click to upload an Urdu PDF</p>
+          <p style="margin:0 0 6px 0;font-weight:900;font-size:0.95rem;color:var(--primary)">Upload Urdu PDF</p>
           <p style="margin:0;font-size:0.82rem;color:var(--muted)">PDF only · stored in your browser</p>
           <input type="file" id="pdf-file" accept="application/pdf" onchange="uploadPdf(this)">
         </div>
@@ -394,7 +451,7 @@
           <span><span class="dot dot-na"></span> Not on rota</span>
           <span><span class="badge badge-uk">UK</span></span>
           <span><span class="badge badge-de">Germany</span></span>
-          <span><span class="badge badge-driver">🚗</span></span>
+          <span><span class="badge badge-driver">Driver</span></span>
         </div>
         <table>
           <thead>
@@ -507,8 +564,9 @@ const testingRota = [
 // ==============================
 // STATE
 // ==============================
-const ST = "hem_app_v4";
-const US = "hem_user_v4";
+const ST = "hem_app_v5";
+const US = "hem_user_v5";
+const THEME = "hem_theme_v5";
 let state = { testerRecords: {}, mulaqatLists: {}, urduPdfs: {} };
 let currentUser = null;
 let mulaqatDate = "2026-10-17";
@@ -518,8 +576,30 @@ function loadState() {
   try { const r = localStorage.getItem(ST); if (r) state = JSON.parse(r); } catch (e) {}
   people.forEach(p => { if (!state.testerRecords[p.testerId]) state.testerRecords[p.testerId] = { amount:"", arrived:false, tested:false, cleared:false, start:"", end:"", notes:"", tested2:"", tested3:"" }; });
   saveState();
+  // theme
+  try { const t = localStorage.getItem(THEME); if (t === 'dark') document.body.classList.add('dark'); } catch (e) {}
+  updateThemeIcon();
 }
 function saveState() { try { localStorage.setItem(ST, JSON.stringify(state)); } catch (e) {} }
+
+// ==============================
+// THEME
+// ==============================
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  try { localStorage.setItem(THEME, isDark ? 'dark' : 'light'); } catch (e) {}
+  updateThemeIcon();
+}
+function updateThemeIcon() {
+  const icon = document.getElementById('theme-icon');
+  if (!icon) return;
+  if (document.body.classList.contains('dark')) {
+    icon.innerHTML = '<path d="M12 3c6 0 9 5 9 9s-3 9-9 9-9-5-9-9 5-9 9Z"/><circle cx="12" cy="12" r="3"/>';
+  } else {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>';
+  }
+}
 
 // ==============================
 // AUTH
@@ -568,23 +648,35 @@ function logout() {
 function buildNav() {
   const nav = document.getElementById('nav');
   const items = [
-    { key:'dashboard', label:'Dashboard', ic:'⌂', admin:false },
-    { key:'people-page', label:'People', ic:'👥', admin:false },
-    { key:'rota-page', label:'Rota 17–19 Oct', ic:'🗓️', admin:false },
-    { key:'mulaqat', label:'Mulaqat Log', ic:'📋', admin:false },
-    { key:'pdfs', label:'Urdu PDFs', ic:'📎', admin:true },
-    { key:'validation-page', label:'Validation & Flags', ic:'⚠️', admin:false },
+    { key:'dashboard', label:'Dashboard', ic:'dashboard', admin:false },
+    { key:'people-page', label:'People', ic:'users', admin:false },
+    { key:'rota-page', label:'Rota 17–19 Oct', ic:'calendar', admin:false },
+    { key:'mulaqat', label:'Mulaqat Log', ic:'file-text', admin:false },
+    { key:'pdfs', label:'Urdu PDFs', ic:'file', admin:true },
+    { key:'validation-page', label:'Validation &amp; Flags', ic:'shield-alert', admin:false },
   ];
   nav.innerHTML = items.map(it => `
     <a class="nav-item ${it.admin?'admin-only':''}" onclick="show('${it.key}'); closeSidebar()">
-      <span class="ic">${it.ic}</span>${it.label}
+      <span class="ic">${svgIcon(it.ic)}</span>${it.label}
     </a>`).join('');
+}
+
+function svgIcon(name) {
+  const icons = {
+    dashboard: '<path d="M3 12a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="3 10 12 1 21 10"/><line x1="12" y1="1" x2="12" y2="23"/><line x1="3" y1="21" x2="21" y2="21"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M13 14h6"/><path d="M7 14h6"/><path d="M12 14v-10"/><path d="M12 2v6"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    'file-text': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="18"/><line x1="9" y1="15" x2="9" y2="9"/><line x1="15" y1="15" x2="15" y2="9"/>',
+    file: '<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>',
+    'shield-alert': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="9" r="1"/><path d="M11 14h2"/><path d="M12 17v2"/>',
+  };
+  return `<svg class="ic" viewBox="0 0 24 24">${icons[name] || icons.file}</svg>`;
 }
 
 function show(key) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(key).classList.add('active');
-  const titles = { dashboard:'Dashboard', 'people-page':'People', 'rota-page':'Rota 17–19 Oct', mulaqat:'Mulaqat Log', pdfs:'Urdu PDFs', 'validation-page':'Validation & Flags' };
+  const titles = { dashboard:'Dashboard', 'people-page':'People', 'rota-page':'Rota 17–19 Oct', mulaqat:'Mulaqat Log', pdfs:'Urdu PDFs', 'validation-page':'Validation &amp; Flags' };
   document.getElementById('topbar-title').textContent = titles[key] || 'Dashboard';
   document.querySelectorAll('.nav-item').forEach(a => a.classList.remove('active'));
   Array.from(document.querySelectorAll('.nav-item')).forEach(a => { if (a.textContent.includes(key.replace('-page','')) || a.textContent.includes(key)) a.classList.add('active'); });
@@ -613,8 +705,8 @@ function countryClass(c){ return c==='UK'?'badge-uk':'badge-de'; }
 function renderPeople() {
   const tb = document.getElementById('people-body');
   tb.innerHTML = people.map((p,i) => {
-    const driver = p.driver ? '<span class="badge badge-driver">🚗 Driver</span>' : '—';
-    const onRota = p.hemOnRota ? '<span class="ok">✓ Yes</span>' : '<span class="flag">✗ No</span>';
+    const driver = p.driver ? '<span class="badge badge-driver">Driver</span>' : '—';
+    const onRota = p.hemOnRota ? '<span class="ok">Yes</span>' : '<span class="flag">No</span>';
     const note = p.note ? ' <span class="flag" style="font-size:0.78rem" title="'+p.note+'">!</span>' : '';
     const role = p.isAdmin ? '<span class="badge badge-admin">Admin</span>' : '<span class="badge badge-test">Tester</span>';
     return `<tr>
@@ -652,14 +744,14 @@ function renderRota() {
     const allOk = team.every(t=>!t.notRota && !t.mismatch);
     const hemNote = rd.hemCovered?'':' <span class="flag">HeM rota does not cover this day</span>';
     return `<div class="rota-day">
-      <h3>${rd.dayName}, ${rd.date}${hemNote} <span class="${allOk?'ok':'warn'}">${allOk?'✓ Team all on '+shiftLabel(asg.shift)+' shift':'⚠ Review team'}</span></h3>
+      <h3>${rd.dayName}, ${rd.date}${hemNote} <span class="${allOk?'ok':'warn'}">${allOk?'Team all on '+shiftLabel(asg.shift)+' shift':'Review team'}</span></h3>
       <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px"><strong>Day shift:</strong> ${shiftLabel(asg.shift)}</div>
       <div class="rota-team">
         ${team.map(t=>{
           const sc = shiftClass(t.sod);
           return `<div class="person-chip ${t.p.driver?'driver':''} ${sc}" title="${t.p.name} — ${t.p.country}">
             <span class="shift-tag">${t.sod?shiftLabel(t.sod):'OFF'}</span>
-            ${t.p.name}${t.p.driver?' <span class="driver-chip">🚗</span>':''}
+            ${t.p.name}${t.p.driver?' <span class="driver-chip">Driver</span>':''}
             ${t.notRota?' <span class="flag">not on HeM rota</span>':(t.mismatch?' <span class="flag">shift mismatch</span>':'')}
           </div>`;
         }).join('')}
@@ -711,7 +803,7 @@ function renderValidation() {
     });
   });
   rotaDays.filter(d=>!d.hemCovered).forEach(d=>flags.push(`<strong>${d.dayName}, ${d.date}</strong> — HeM rota ends 18 Oct.`));
-  list.innerHTML = flags.length===0 ? '<p class="ok">✓ No flags — everyone checks out.</p>' : '<ul>'+flags.map(f=>`<li><span class="flag">⚠</span> ${f}</li>`).join('')+'</ul>';
+  list.innerHTML = flags.length===0 ? '<p class="ok">No flags — everyone checks out.</p>' : '<ul>'+flags.map(f=>`<li><span class="flag">Issue</span> ${f}</li>`).join('')+'</ul>';
 }
 
 // ==============================
@@ -729,10 +821,10 @@ function renderDashboard() {
   const notOnRota = people.filter(p=>!p.hemOnRota).length;
   const stats = document.getElementById('dash-stats');
   stats.innerHTML = `
-    <div class="stat"><div class="ic">👥</div><div class="txt"><div class="big">${total}</div><div class="cap">Testers</div></div></div>
-    <div class="stat"><div class="ic">✅</div><div class="txt"><div class="big">${onRota}</div><div class="cap">On HeM rota</div></div></div>
-    <div class="stat"><div class="ic">⚠️</div><div class="txt"><div class="big ${notOnRota?'flag':'ok'}">${notOnRota}</div><div class="cap">Not on rota</div></div></div>
-    <div class="stat"><div class="ic">📋</div><div class="txt"><div class="big">${mulaqatDate}</div><div class="cap">Mulaqat date</div></div></div>
+    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M13 14h6"/><path d="M7 14h6"/><path d="M12 14v-10"/><path d="M12 2v6"/></svg></div><div class="txt"><div class="big">${total}</div><div class="cap">Testers</div></div></div>
+    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="txt"><div class="big">${onRota}</div><div class="cap">On HeM rota</div></div></div>
+    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89A7 7 0 0 1 20.5 12C20.5 5.07 15.46 1 9.5 1A7 7 0 0 0 2.81 13.89"/></svg></div><div class="txt"><div class="big ${notOnRota?'flag':'ok'}">${notOnRota}</div><div class="cap">Not on rota</div></div></div>
+    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="txt"><div class="big">${mulaqatDate}</div><div class="cap">Mulaqat date</div></div></div>
   `;
 }
 
@@ -809,8 +901,8 @@ function clearMulaqat(){
 function saveMulaqat(){
   saveState();
   const t=document.createElement('div');
-  t.textContent='✓ Mulaqat list saved for '+mulaqatDate;
-  t.style.cssText='position:fixed;top:110px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:.8rem 1.4rem;border-radius:12px;font-size:.88rem;z-index:9999;box-shadow:0 8px 24px -6px rgba(109,90,74,0.35)';
+  t.textContent='Mulaqat list saved for '+mulaqatDate;
+  t.style.cssText='position:fixed;top:110px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:.8rem 1.4rem;border-radius:12px;font-size:.88rem;z-index:9999;box-shadow:0 8px 24px -6px rgba(29,78,216,0.35)';
   document.body.appendChild(t);
   setTimeout(()=>t.remove(),1800);
 }
