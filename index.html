@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<title>HeM Testing — Dashboard</title>
+<title>HeM Testing — COVID-19 Clearance Management</title>
 <style>
-  /* ---------- Design tokens ---------- */
   :root {
     --bg: #f8fafc;
     --card: #ffffff;
@@ -51,7 +50,7 @@
     .sidebar { position: static; transform: none !important; box-shadow: none; border-right: 1px solid var(--border); }
     .btn-menu { display: none; }
   }
-  .sidebar-header { height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+  .sidebar-header { height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid var(--border); }
   .sidebar-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--primary); display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 14px; box-shadow: 0 4px 10px -4px rgba(29,78,216,0.35); }
   .sidebar-title { font-size: 1.1rem; font-weight: 900; letter-spacing: -0.02em; }
 
@@ -143,7 +142,7 @@
   tr.own-row { background: #fff7e8; border-left: 5px solid var(--warn); }
   tr.own-row td { border-color: #f3d9b4; }
   td.nr { font-weight: 900; color: var(--ink); width: 40px; }
-  td.name { font-weight: 800; width: 180px; }
+  td.name { font-weight: 800; width: 170px; }
   td.shift-col { width: 72px; }
   td.actions { width: 150px; }
 
@@ -158,6 +157,20 @@
   .badge-admin { background: var(--primary); color: #fff; border-color: #1e40af; }
   .badge-test { background: #f0ece4; color: #7e7469; border-color: #e0d7c9; }
   .badge-driver { font-size: 0.7rem; padding: 3px 10px; border-radius: 8px; background: #d97706; color: #fff; }
+
+  /* Status badges - critical: separate result from clearance */
+  .status-scheduled { background: #e2e8f0; color: #475569; }
+  .status-arrived { background: #dbeafe; color: #1e40af; }
+  .status-testing { background: #fef3c7; color: #92400e; }
+  .status-result-pending { background: #fef3c7; color: #92400e; }
+  .status-clearance-pending { background: #fdeeda; color: #a86922; }
+  .status-cleared { background: #dcfce7; color: #166534; }
+  .status-not-cleared { background: #fee2e2; color: #991b1b; }
+  .result-negative { background: #dcfce7; color: #166534; }
+  .result-positive { background: #fee2e2; color: #991b1b; }
+  .result-invalid { background: #fef3c7; color: #92400e; }
+  .result-inconclusive { background: #e2e8f0; color: #475569; }
+  .result-pending { background: #f1f5f9; color: #64748b; }
 
   .ok { color: var(--success); font-weight: 900; font-size: 0.84rem; }
   .flag { color: var(--danger); font-weight: 900; font-size: 0.84rem; }
@@ -182,6 +195,9 @@
   input.text { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
   body.dark input.text { background: #334155; border-color: #475569; color: var(--ink); }
   input.text:focus { border-color: var(--primary); outline: none; }
+  select { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; background: #fff; color: var(--ink); }
+  body.dark select { background: #334155; border-color: #475569; color: var(--ink); }
+  select:focus { border-color: var(--primary); outline: none; }
 
   /* buttons */
   .btn { border: 1px solid var(--border); border-radius: 14px; background: var(--card); color: var(--ink); font-weight: 800; font-size: 0.86rem; padding: 9px 16px; cursor: pointer; transition: all 0.18s ease; box-shadow: 0 4px 10px -6px rgba(0,0,0,0.05); }
@@ -189,10 +205,14 @@
   body.dark .btn:hover { background: #334155; border-color: #475569; }
   .btn.primary { background: var(--primary); color: #fff; border-color: #1e40af; }
   .btn.primary:hover { background: var(--primaryHover); border-color: #1e40af; }
+  .btn.success { background: var(--success); color: #fff; border-color: #047857; }
+  .btn.success:hover { background: #047857; }
   .btn.danger { background: #fef2f2; color: var(--danger); border-color: #fecaca; }
   .btn.danger:hover { background: #fecaca; }
   .btn.sm { padding: 6px 11px; font-size: 0.8rem; }
   .btn.secondary { background: #f0ece4; color: #7e7469; border-color: #e0d7c9; }
+  .btn.admin-only { display: none; }
+  body.is-admin .btn.admin-only { display: inline-block; }
 
   .bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
   .save-msg { font-size: 0.84rem; color: var(--success); font-weight: 900; }
@@ -277,6 +297,51 @@
   body.dark .storage-info { background: #1e3a8a; border-color: #3b82f6; color: #bfdbfe; }
 
   svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* ---------- Tester Interface (mobile priority) ---------- */
+  .tester-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  @media (max-width: 600px) { .tester-grid { grid-template-columns: 1fr; } }
+  .tester-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
+  .tester-card .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .tester-card .name { font-weight: 900; font-size: 1.05rem; }
+  .tester-card .shift-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 8px; background: #e2e8f0; color: #64748b; font-weight: 800; }
+  .tester-card .status { font-size: 0.82rem; font-weight: 800; }
+  .tester-card .actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .tester-card .actions .btn { width: 100%; padding: 12px; font-size: 0.95rem; }
+  .tester-card .actions .btn.secondary { background: #f8fafc; color: var(--muted); border-color: var(--border); }
+  .tester-card .result-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .tester-card .clearance-note { font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 8px; margin-top: auto; }
+
+  /* ---------- Admin Dashboard ---------- */
+  .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  @media (max-width: 600px) { .admin-grid { grid-template-columns: 1fr; } }
+  .admin-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+  .admin-card h4 { margin: 0 0 10px 0; font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .admin-card .big { font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+  .admin-card .sub { font-size: 0.82rem; color: var(--muted); }
+  .admin-card .sub.ok { color: var(--success); font-weight: 800; }
+  .admin-card .sub.down { color: var(--danger); font-weight: 800; }
+  .admin-card .sub.warn { color: var(--warn); font-weight: 800; }
+
+  .timeline { border-left: 2px solid var(--border); padding-left: 16px; margin-top: 12px; }
+  .timeline-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 0.88rem; }
+  .timeline-time { font-weight: 800; color: var(--muted); min-width: 60px; }
+
+  /* ---------- Settings page ---------- */
+  .setting-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .setting-row label { font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  .setting-row input { padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; background: #f8fafc; color: var(--ink); }
+  body.dark .setting-row input { background: #1e293b; border-color: #334155; color: var(--ink); }
+  .setting-row input:focus { border-color: var(--primary); outline: none; background: #fff; }
+  body.dark .setting-row input:focus { background: var(--card); }
+  .sync-status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 8px; }
+  .sync-online { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+  .sync-offline { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+  .sync-syncing { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -344,7 +409,7 @@
         </div>
       </section>
 
-      <!-- DASHBOARD -->
+      <!-- ADMIN DASHBOARD -->
       <section id="dashboard" class="page">
         <div class="page-header">
           <div>
@@ -353,35 +418,48 @@
           </div>
           <div style="display:flex;gap:10px">
             <button class="btn primary" onclick="currentUser.isAdmin ? show('mulaqat') : show('tester')">Mulaqat Log</button>
+            <button class="btn admin-only" onclick="show('settings')">Settings</button>
           </div>
         </div>
 
         <div class="grid4" id="dash-stats"></div>
 
-        <div class="card">
+        <div class="card admin-only">
           <div class="card-body">
-            <h3 style="margin:0 0 12px 0;font-size:1rem;font-weight:900;letter-spacing:-0.01em">Quick actions</h3>
+            <h3 style="margin:0 0 12px 0;font-size:1rem;font-weight:900;letter-spacing:-0.01em">Admin Quick Actions</h3>
             <div class="bar" style="margin-bottom:0">
-              <button class="btn primary" onclick="currentUser.isAdmin ? show('mulaqat') : show('tester')">Mulaqat Log</button>
-              <button class="btn" onclick="show('people-page')">People</button>
-              <button class="btn" onclick="show('rota-page')">Rota 17–19 Oct</button>
+              <button class="btn primary" onclick="show('people-page')">Manage People</button>
+              <button class="btn" onclick="show('rota-page')">Rota</button>
               <button class="btn" onclick="show('validation-page')">Validation</button>
               <button class="btn admin-only" onclick="show('pdfs')">Urdu PDFs</button>
             </div>
           </div>
         </div>
 
-        <div class="bar">
-          <button class="btn primary" onclick="exportBackup()">Export Backup</button>
-          <button class="btn" onclick="importBackup()">Import Backup</button>
-          <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(this)">
+        <div class="card">
+          <div class="card-body">
+            <h3 style="margin:0 0 12px 0;font-size:1rem;font-weight:900;letter-spacing:-0.01em">Live Activity</h3>
+            <div class="timeline" id="dash-timeline">Loading activity...</div>
+          </div>
         </div>
+
         <div class="storage-info">
-          <strong>Where is data saved?</strong> All tester records, mulaqat lists, and uploaded PDFs are stored in your browser's localStorage on this device. Use Export Backup to save a copy. Nothing is sent to a server.
+          <strong>Data location:</strong> <span id="data-location-badge" class="sync-dot"></span> <span id="data-location-text">Browser localStorage</span>. Nothing is sent to a server. Use Settings to connect to your backend when ready.
         </div>
       </section>
 
-      <!-- MULAQAT LOG -->
+      <!-- TESTER INTERFACE (mobile priority) -->
+      <section id="tester" class="page">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">My Testing Queue</h2>
+            <p class="page-sub" id="tester-sub"></p>
+          </div>
+        </div>
+        <div class="tester-grid" id="tester-grid"></div>
+      </section>
+
+      <!-- MULAQAT LOG (master list) -->
       <section id="mulaqat" class="page">
         <div class="page-header">
           <div>
@@ -407,16 +485,14 @@
                 <tr>
                   <th style="width:44px">Nr</th>
                   <th>Name</th>
-                  <th style="width:96px">Amount</th>
-                  <th style="width:120px">Start Time</th>
-                  <th style="width:120px">End Time</th>
+                  <th style="width:96px">Shift</th>
+                  <th style="width:96px">Status</th>
+                  <th style="width:110px">Result</th>
+                  <th style="width:110px">Clearance</th>
+                  <th style="width:110px">Start Time</th>
+                  <th style="width:110px">End Time</th>
                   <th style="width:96px">Duration</th>
-                  <th style="width:80px">Arrived</th>
-                  <th style="width:80px">Tested</th>
-                  <th style="width:80px">Cleared</th>
                   <th>Notes</th>
-                  <th style="width:120px">Tested 2</th>
-                  <th style="width:120px">Tested 3</th>
                 </tr>
               </thead>
               <tbody id="mulaqat-body"></tbody>
@@ -425,11 +501,11 @@
         </div>
 
         <div class="admin-only-section" style="display:none" id="admin-mulaqat-hint">
-          <strong>Admin:</strong> You can edit every row. Changes save automatically.
+          <strong>Admin:</strong> You can edit every row. Result and Clearance are recorded separately — a negative test does not automatically clear someone.
         </div>
       </section>
 
-      <!-- URDU PDFS -->
+      <!-- URDU PDFS (admin) -->
       <section id="pdfs" class="page">
         <div class="page-header">
           <div>
@@ -447,6 +523,45 @@
           <input type="file" id="pdf-file" accept="application/pdf" onchange="uploadPdf(this)">
         </div>
         <div id="pdf-list"></div>
+      </section>
+
+      <!-- SETTINGS (admin) -->
+      <section id="settings" class="page">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Settings</h2>
+            <p class="page-sub">Connect to your backend when ready.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h3 style="margin:0 0 16px 0;font-size:1rem;font-weight:900;letter-spacing:-0.01em">Backend Connection</h3>
+            <div class="setting-row">
+              <label>API Base URL</label>
+              <input type="text" id="api-url" placeholder="https://your-backend.com/api" value="">
+              <div class="sync-status" id="api-status"> <span class="sync-dot"></span> Offline mode (localStorage)</div>
+            </div>
+            <div class="bar">
+              <button class="btn primary" onclick="saveApiSettings()">Save API Settings</button>
+              <button class="btn" onclick="testApiConnection()">Test Connection</button>
+              <button class="btn danger" onclick="clearApiSettings()">Clear API URL</button>
+            </div>
+            <p class="muted" style="margin-top:12px">When an API URL is set, mulaqat records and tester data will sync to your backend instead of (or in addition to) browser storage. Keep your API credentials in a <code>.env</code> file on your server — never in this HTML file.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h3 style="margin:0 0 16px 0;font-size:1rem;font-weight:900;letter-spacing:-0.01em">Data Import / Export</h3>
+            <div class="bar">
+              <button class="btn primary" onclick="exportBackup()">Export Backup (.json)</button>
+              <button class="btn" onclick="document.getElementById('import-file').click()">Import Backup</button>
+              <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(this)">
+            </div>
+            <p class="muted">Use this to move data between devices or back up before connecting to a backend.</p>
+          </div>
+        </div>
       </section>
 
       <!-- PEOPLE -->
@@ -575,25 +690,81 @@ const testingRota = [
 ];
 
 // ==============================
-// STATE
+// STATE & CONFIG
 // ==============================
-const ST = "hem_app_v5";
-const US = "hem_user_v5";
-const THEME = "hem_theme_v5";
+const ST = "hem_app_v7";
+const US = "hem_user_v7";
+const THEME = "hem_theme_v7";
+const CFG = "hem_config_v7";
 let state = { testerRecords: {}, mulaqatLists: {}, urduPdfs: {} };
+let config = { apiUrl: "", apiEnabled: false };
 let currentUser = null;
 let mulaqatDate = "2026-10-17";
 let pdfDate = "2026-10-17";
 
 function loadState() {
   try { const r = localStorage.getItem(ST); if (r) state = JSON.parse(r); } catch (e) {}
-  people.forEach(p => { if (!state.testerRecords[p.testerId]) state.testerRecords[p.testerId] = { amount:"", arrived:false, tested:false, cleared:false, start:"", end:"", notes:"", tested2:"", tested3:"" }; });
+  try { const c = localStorage.getItem(CFG); if (c) config = JSON.parse(c); } catch (e) {}
+  people.forEach(p => { if (!state.testerRecords[p.testerId]) state.testerRecords[p.testerId] = initRecord(); });
   saveState();
-  // theme
   try { const t = localStorage.getItem(THEME); if (t === 'dark') document.body.classList.add('dark'); } catch (e) {}
   updateThemeIcon();
+  updateApiStatusUI();
 }
+
+function initRecord() {
+  return {
+    status: "scheduled",
+    arrived: false,
+    arrivedTime: "",
+    amount: "",
+    start: "",
+    end: "",
+    notes: "",
+    testResult: "",
+    testResultTime: "",
+    testResultBy: "",
+    testNumber: 1,
+    clearance: "",
+    clearanceTime: "",
+    clearanceBy: "",
+    clearanceNotes: ""
+  };
+}
+
 function saveState() { try { localStorage.setItem(ST, JSON.stringify(state)); } catch (e) {} }
+function saveConfig() { try { localStorage.setItem(CFG, JSON.stringify(config)); } catch (e) {} }
+
+// ==============================
+// API LAYER (ready for your backend)
+// ==============================
+async function apiRequest(path, method = "GET", body = null) {
+  if (!config.apiEnabled || !config.apiUrl) return null;
+  const url = config.apiUrl.replace(/\/$/, "") + "/" + path.replace(/^\//, "");
+  try {
+    const opts = { method, headers: { "Content-Type": "application/json" } };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(url, opts);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return await res.json();
+  } catch (e) {
+    console.error("API error:", e);
+    return null;
+  }
+}
+
+async function apiSaveMulaqat(date, rows) {
+  return await apiRequest(`mulaqat/${date}`, "POST", { rows });
+}
+async function apiLoadMulaqat(date) {
+  return await apiRequest(`mulaqat/${date}`, "GET");
+}
+async function apiSavePdfs(date, pdfs) {
+  return await apiRequest(`pdfs/${date}`, "POST", { pdfs });
+}
+async function apiLoadPdfs(date) {
+  return await apiRequest(`pdfs/${date}`, "GET");
+}
 
 // ==============================
 // THEME
@@ -662,10 +833,12 @@ function buildNav() {
   const nav = document.getElementById('nav');
   const items = [
     { key:'dashboard', label:'Dashboard', ic:'dashboard', admin:false },
+    { key:'tester', label:'My Testing Queue', ic:'users', admin:false },
+    { key:'mulaqat', label:'Mulaqat Log', ic:'file-text', admin:false },
     { key:'people-page', label:'People', ic:'users', admin:false },
     { key:'rota-page', label:'Rota 17–19 Oct', ic:'calendar', admin:false },
-    { key:'mulaqat', label:'Mulaqat Log', ic:'file-text', admin:false },
     { key:'pdfs', label:'Urdu PDFs', ic:'file', admin:true },
+    { key:'settings', label:'Settings', ic:'settings', admin:true },
     { key:'validation-page', label:'Validation &amp; Flags', ic:'shield-alert', admin:false },
   ];
   nav.innerHTML = items.map(it => `
@@ -677,11 +850,12 @@ function buildNav() {
 function svgIcon(name) {
   const icons = {
     dashboard: '<path d="M3 12a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="3 10 12 1 21 10"/><line x1="12" y1="1" x2="12" y2="23"/><line x1="3" y1="21" x2="21" y2="21"/>',
-    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M13 14h6"/><path d="M7 14h6"/><path d="M12 14v-10"/><path d="M12 2v6"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>',
+    'file-text': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
     calendar: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
-    'file-text': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="18"/><line x1="9" y1="15" x2="9" y2="9"/><line x1="15" y1="15" x2="15" y2="9"/>',
     file: '<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>',
-    'shield-alert': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="9" r="1"/><path d="M11 14h2"/><path d="M12 17v2"/>',
+    'shield-alert': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="9" r="1"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2-2v-4a1.65 1.65 0 0 0-1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2 2v4a1.65 1.65 0 0 0 1.51 1z"/></svg>',
   };
   return `<svg class="ic" viewBox="0 0 24 24">${icons[name] || icons.file}</svg>`;
 }
@@ -689,15 +863,17 @@ function svgIcon(name) {
 function show(key) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(key).classList.add('active');
-  const titles = { dashboard:'Dashboard', 'people-page':'People', 'rota-page':'Rota 17–19 Oct', mulaqat:'Mulaqat Log', pdfs:'Urdu PDFs', 'validation-page':'Validation &amp; Flags' };
+  const titles = { dashboard:'Dashboard', tester:'My Testing Queue', mulaqat:'Mulaqat Log', 'people-page':'People', 'rota-page':'Rota 17–19 Oct', pdfs:'Urdu PDFs', settings:'Settings', 'validation-page':'Validation &amp; Flags' };
   document.getElementById('topbar-title').textContent = titles[key] || 'Dashboard';
   document.querySelectorAll('.nav-item').forEach(a => a.classList.remove('active'));
   Array.from(document.querySelectorAll('.nav-item')).forEach(a => { if (a.textContent.includes(key.replace('-page','')) || a.textContent.includes(key)) a.classList.add('active'); });
   if (key === 'dashboard') renderDashboard();
+  if (key === 'tester') renderTester();
+  if (key === 'mulaqat') renderMulaqat();
   if (key === 'people-page') renderPeople();
   if (key === 'rota-page') renderRota();
-  if (key === 'mulaqat') renderMulaqat();
   if (key === 'pdfs') renderPdfs();
+  if (key === 'settings') renderSettings();
   if (key === 'validation-page') renderValidation();
 }
 
@@ -711,6 +887,21 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;'
 function shiftClass(s){ return {night:'night',morning:'morning',day:'day',null:'na'}[s]||'na'; }
 function shiftLabel(s){ if(!s) return '—'; return s.charAt(0).toUpperCase()+s.slice(1); }
 function countryClass(c){ return c==='UK'?'badge-uk':'badge-de'; }
+
+function statusLabel(s){
+  const m = { scheduled:'Scheduled', arrived:'Arrived', testing:'Testing', 'result-pending':'Result Pending', 'clearance-pending':'Clearance Pending', cleared:'Cleared', 'not-cleared':'Not Cleared' };
+  return m[s] || s;
+}
+function statusBadgeClass(s){
+  return { scheduled:'status-scheduled', arrived:'status-arrived', testing:'status-testing', 'result-pending':'status-result-pending', 'clearance-pending':'status-clearance-pending', cleared:'status-cleared', 'not-cleared':'status-not-cleared' }[s] || '';
+}
+
+function resultLabel(r){ const m={ negative:'Negative', positive:'Positive', invalid:'Invalid', inconclusive:'Inconclusive', '':'' }; return m[r] || r; }
+function resultBadgeClass(r){ return { negative:'result-negative', positive:'result-positive', invalid:'result-invalid', inconclusive:'result-inconclusive', '':'' }[r] || ''; }
+
+function clearanceLabel(c){ const m={ cleared:'Cleared', 'not-cleared':'Not Cleared', '':'' }; return m[c] || c; }
+
+function nowStr(){ const d=new Date(); return d.toISOString().slice(11,16); }
 
 // ==============================
 // RENDER: PEOPLE / ROTA / VALIDATION
@@ -833,12 +1024,107 @@ function renderDashboard() {
   const onRota = people.filter(p=>p.hemOnRota).length;
   const notOnRota = people.filter(p=>!p.hemOnRota).length;
   const stats = document.getElementById('dash-stats');
+
+  const allRecords = Object.values(state.testerRecords);
+  const arrived = allRecords.filter(r=>r.arrived).length;
+  const testing = allRecords.filter(r=>r.status==='testing').length;
+  const completed = allRecords.filter(r=>r.status==='result-pending' || r.status==='clearance-pending' || r.status==='cleared' || r.status==='not-cleared').length;
+  const resultsPending = allRecords.filter(r=>r.status==='result-pending').length;
+  const clearancePending = allRecords.filter(r=>r.status==='clearance-pending').length;
+  const cleared = allRecords.filter(r=>r.clearance==='cleared').length;
+  const notCleared = allRecords.filter(r=>r.clearance==='not-cleared').length;
+  const positive = allRecords.filter(r=>r.testResult==='positive').length;
+  const negative = allRecords.filter(r=>r.testResult==='negative').length;
+
   stats.innerHTML = `
-    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M13 14h6"/><path d="M7 14h6"/><path d="M12 14v-10"/><path d="M12 2v6"/></svg></div><div class="txt"><div class="big">${total}</div><div class="cap">Testers</div></div></div>
-    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="txt"><div class="big">${onRota}</div><div class="cap">On HeM rota</div></div></div>
-    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89A7 7 0 0 1 20.5 12C20.5 5.07 15.46 1 9.5 1A7 7 0 0 0 2.81 13.89"/></svg></div><div class="txt"><div class="big ${notOnRota?'flag':'ok'}">${notOnRota}</div><div class="cap">Not on rota</div></div></div>
-    <div class="stat"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="txt"><div class="big">${mulaqatDate}</div><div class="cap">Mulaqat date</div></div></div>
+    <div class="stat"><div class="ic">👥</div><div class="txt"><div class="big">${total}</div><div class="cap">Total testers</div></div></div>
+    <div class="stat"><div class="ic">✅</div><div class="txt"><div class="big">${onRota}</div><div class="cap">On HeM rota</div></div></div>
+    <div class="stat"><div class="ic">📋</div><div class="txt"><div class="big ${arrived? 'ok':'muted'}">${arrived}</div><div class="cap">Arrived today</div></div></div>
+    <div class="stat"><div class="ic">🔬</div><div class="txt"><div class="big ${testing? 'warn':'ok'}">${testing}</div><div class="cap">Testing now</div></div></div>
+    <div class="stat"><div class="ic">📊</div><div class="txt"><div class="big">${completed}</div><div class="cap">Tests completed</div></div></div>
+    <div class="stat"><div class="ic">⏳</div><div class="txt"><div class="big ${resultsPending? 'warn':'ok'}">${resultsPending}</div><div class="cap">Results pending</div></div></div>
+    <div class="stat"><div class="ic">🛡️</div><div class="txt"><div class="big ${clearancePending? 'warn':'ok'}">${clearancePending}</div><div class="cap">Clearance pending</div></div></div>
+    <div class="stat"><div class="ic">✔️</div><div class="txt"><div class="big ${cleared? 'ok':'muted'}">${cleared}</div><div class="cap">Cleared</div></div></div>
   `;
+
+  const tl = document.getElementById('dash-timeline');
+  let activities = [];
+  people.forEach(p=>{
+    const r = state.testerRecords[p.testerId];
+    if(!r) return;
+    if(r.arrivedTime) activities.push({t:r.arrivedTime, txt:`${p.name} arrived`, type:'arrived'});
+    if(r.start) activities.push({t:r.start, txt:`Testing started for ${p.name}`, type:'testing'});
+    if(r.end) activities.push({t:r.end, txt:`Test completed for ${p.name}`, type:'completed'});
+    if(r.testResultTime) activities.push({t:r.testResultTime, txt:`Result recorded for ${p.name} (${resultLabel(r.testResult)})`, type:'result'});
+    if(r.clearanceTime) activities.push({t:r.clearanceTime, txt:`Clearance decision for ${p.name} (${clearanceLabel(r.clearance)})`, type:'clearance'});
+  });
+  activities.sort((a,b)=> b.t.localeCompare(a.t));
+  if(activities.length===0) tl.innerHTML = '<p class="muted">No activity recorded yet.</p>';
+  else tl.innerHTML = activities.slice(0,12).map(a=>{
+    const cls = { arrived:'status-arrived', testing:'status-testing', completed:'status-cleared', result:'status-result-pending', clearance:'status-clearance-pending' }[a.type] || '';
+    return `<div class="timeline-item"><span class="timeline-time">${a.t}</span><span class="${cls}">${a.txt}</span></div>`;
+  }).join('');
+}
+
+// ==============================
+// TESTER INTERFACE
+// ==============================
+function renderTester() {
+  const me = currentUser ? currentUser.testerId : null;
+  const p = people.find(x => x.testerId === me);
+  document.getElementById('tester-sub').textContent = p ? `Welcome, ${p.name} (ID ${me})` : '';
+  const grid = document.getElementById('tester-grid');
+  const rec = state.testerRecords[me] || initRecord();
+  grid.innerHTML = `
+    <div class="tester-card">
+      <div class="head">
+        <div class="name">${p ? p.name : 'You'}</div>
+        <div class="shift-badge">${shiftLabel(p.shift)} Shift</div>
+      </div>
+      <div class="status ${statusBadgeClass(rec.status)}">${statusLabel(rec.status)}</div>
+      <div class="actions">
+        ${rec.status==='scheduled' || rec.status==='arrived'
+          ? `<button class="btn success" onclick="testerAction('${me}','arrive')">Mark Arrived</button>`
+          : rec.status==='arrived'
+          ? `<button class="btn primary" onclick="testerAction('${me}','startTest')">Start Test</button>`
+          : rec.status==='testing'
+          ? `<button class="btn success" onclick="testerAction('${me}','completeTest')">Complete Test</button>`
+          : rec.status==='result-pending'
+          ? `<button class="btn primary" onclick="testerAction('${me}','recordResult')">Record Result</button>`
+          : `<button class="btn secondary" disabled>Waiting for clearance</button>`
+        }
+        ${rec.status!=='scheduled' ? `<button class="btn secondary" onclick="testerAction('${me}','reset')">Reset Record</button>` : ''}
+      </div>
+      ${rec.testResult ? `<div class="result-row"><span class="badge ${resultBadgeClass(rec.testResult)}">Result: ${resultLabel(rec.testResult)}</span>${rec.testResultTime?`<span class="muted">${rec.testResultTime}</span>`:''}</div>` : ''}
+      ${rec.clearance ? `<div class="result-row"><span class="badge ${rec.clearance==='cleared'?'status-cleared':'status-not-cleared'}">Clearance: ${clearanceLabel(rec.clearance)}</span>${rec.clearanceTime?`<span class="muted">${rec.clearanceTime}</span>`:''}</div>` : ''}
+      <div class="clearance-note">
+        <strong>Important:</strong> Recording a test result does not automatically clear someone. Clearance must be recorded separately by an authorised person.
+      </div>
+    </div>
+  `;
+}
+
+function testerAction(testerId, action){
+  const rec = state.testerRecords[testerId] || initRecord();
+  const now = nowStr();
+  if(action==='arrive'){ rec.status='arrived'; rec.arrived=true; rec.arrivedTime=now; }
+  else if(action==='startTest'){ rec.status='testing'; rec.start=now; }
+  else if(action==='completeTest'){ rec.status='result-pending'; rec.end=now; }
+  else if(action==='recordResult'){
+    const r = prompt("Enter result (negative/positive/invalid/inconclusive):");
+    if(!r) return;
+    const val = r.toLowerCase().trim();
+    if(!['negative','positive','invalid','inconclusive'].includes(val)){ alert("Invalid result."); return; }
+    rec.testResult = val;
+    rec.testResultTime = now;
+    rec.testResultBy = currentUser.name;
+    rec.status = 'clearance-pending';
+  }
+  else if(action==='reset'){ Object.assign(rec, initRecord()); }
+  state.testerRecords[testerId] = rec;
+  saveState();
+  renderTester();
+  renderDashboard();
 }
 
 // ==============================
@@ -863,7 +1149,7 @@ function renderMulaqat() {
   document.getElementById('admin-mulaqat-hint').style.display = editable ? 'block' : 'none';
   document.getElementById('mulaqat-title').textContent = editable ? "Mulaqat Log (Admin)" : "Today's Mulaqat List";
   document.getElementById('mulaqat-sub').textContent = editable
-    ? `Edit every row for ${mulaqatDate}. Changes save automatically.`
+    ? `Edit every row for ${mulaqatDate}. Result and Clearance are separate — a negative test does not automatically clear someone.`
     : `Read-only view for ${mulaqatDate}.`;
   const rows = ensureMulaqat(mulaqatDate);
   const tb = document.getElementById('mulaqat-body');
@@ -879,30 +1165,52 @@ function renderMulaqat() {
     return `<tr class="${isOwn?'own-row':''}">
       <td class="nr">${r.nr}</td>
       <td class="name"><input type="text" class="text" value="${esc(r.name)}" onchange="setMulaqatField(${i},'name',this.value)"${dis}>${p&&!r.name?' <span class="muted">('+esc(p.name)+')</span>':''}</td>
-      <td><input type="text" class="amount" value="${esc(r.amount)}" onchange="setMulaqatField(${i},'amount',this.value)"${dis}></td>
+      <td><span class="badge badge-${shiftClass(p?p.shift:null)}">${p?shiftLabel(p.shift):'—'}</span></td>
+      <td><select class="text" onchange="setMulaqatField(${i},'status',this.value)"${dis}>
+        <option value="scheduled" ${r.status==='scheduled'?'selected':''}>Scheduled</option>
+        <option value="arrived" ${r.status==='arrived'?'selected':''}>Arrived</option>
+        <option value="testing" ${r.status==='testing'?'selected':''}>Testing</option>
+        <option value="result-pending" ${r.status==='result-pending'?'selected':''}>Result Pending</option>
+        <option value="clearance-pending" ${r.status==='clearance-pending'?'selected':''}>Clearance Pending</option>
+        <option value="cleared" ${r.status==='cleared'?'selected':''}>Cleared</option>
+        <option value="not-cleared" ${r.status==='not-cleared'?'selected':''}>Not Cleared</option>
+      </select></td>
+      <td><select class="text" onchange="setMulaqatField(${i},'testResult',this.value)"${dis}>
+        <option value="">—</option>
+        <option value="negative" ${r.testResult==='negative'?'selected':''}>Negative</option>
+        <option value="positive" ${r.testResult==='positive'?'selected':''}>Positive</option>
+        <option value="invalid" ${r.testResult==='invalid'?'selected':''}>Invalid</option>
+        <option value="inconclusive" ${r.testResult==='inconclusive'?'selected':''}>Inconclusive</option>
+      </select></td>
+      <td><select class="text" onchange="setMulaqatField(${i},'clearance',this.value)"${dis}>
+        <option value="">—</option>
+        <option value="cleared" ${r.clearance==='cleared'?'selected':''}>Cleared</option>
+        <option value="not-cleared" ${r.clearance==='not-cleared'?'selected':''}>Not Cleared</option>
+      </select></td>
       <td><input type="time" class="time" value="${esc(r.start)}" onchange="setMulaqatField(${i},'start',this.value); redrawDur(${i})"${dis}></td>
       <td><input type="time" class="time" value="${esc(r.end)}" onchange="setMulaqatField(${i},'end',this.value); redrawDur(${i})"${dis}></td>
       <td><span id="dur-${i}" class="${dcls}">${dur}</span></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${chk(r.arrived)} onchange="setMulaqatField(${i},'arrived',this.checked)"${dis}> Arrived</label></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${chk(r.tested)} onchange="setMulaqatField(${i},'tested',this.checked)"${dis}> Tested</label></td>
-      <td><label class="cb-wrap"><input type="checkbox" ${chk(r.cleared)} onchange="setMulaqatField(${i},'cleared',this.checked)"${dis}> Cleared</label></td>
       <td><input type="text" class="notes" value="${esc(r.notes)}" onchange="setMulaqatField(${i},'notes',this.value)"${dis}></td>
-      <td><input type="time" class="time" value="${esc(r.tested2)}" onchange="setMulaqatField(${i},'tested2',this.value)"${dis}></td>
-      <td><input type="time" class="time" value="${esc(r.tested3)}" onchange="setMulaqatField(${i},'tested3',this.value)"${dis}></td>
     </tr>`;
   }).join('');
 }
 function setMulaqatField(i,field,value){
   const rows = ensureMulaqat(mulaqatDate);
-  rows[i][field] = value==='' ? (field==='arrived'||field==='tested'||field==='cleared'?false:'') : value;
+  rows[i][field] = value==='' ? false : value;
   saveState();
   if(field==='start'||field==='end'){ setTimeout(()=>{ const r2=ensureMulaqat(mulaqatDate); const el=document.getElementById('dur-'+i); if(el){ el.textContent=durationText(r2[i].start,r2[i].end); el.className=durationCls(r2[i].start,r2[i].end); } },0); }
+  if(field==='clearance' && value){
+    rows[i].status = value==='cleared' ? 'cleared' : (value==='not-cleared' ? 'not-cleared' : rows[i].status);
+    saveState();
+  }
+  if(field==='status' && value==='cleared'){ rows[i].clearance='cleared'; saveState(); }
+  if(field==='status' && value==='not-cleared'){ rows[i].clearance='not-cleared'; saveState(); }
 }
 function redrawDur(i){ setMulaqatField(i,'start',document.querySelectorAll('#mulaqat-body tr')[i].querySelector('input.time').value); }
 function loadHemTesters(){
   if(!confirm("Load the 34 HeM testers into today's mulaqat list? This replaces names 1–34.")) return;
   const rows = ensureMulaqat(mulaqatDate);
-  people.forEach((p,idx)=>{ if(idx<35){ rows[idx].nr=idx+1; rows[idx].name=p.name; } });
+  people.forEach((p,idx)=>{ if(idx<35){ rows[idx].nr=idx+1; rows[idx].name=p.name; rows[idx].status='scheduled'; } });
   saveState(); renderMulaqat();
 }
 function clearMulaqat(){
@@ -951,6 +1259,77 @@ function renderPdfs(){
 function viewPdf(i){ const p=(state.urduPdfs[pdfDate]||[])[i]; window.open(p.dataUrl,'_blank'); }
 function downloadPdf(i){ const p=(state.urduPdfs[pdfDate]||[])[i]; const a=document.createElement('a'); a.href=p.dataUrl; a.download=p.name; document.body.appendChild(a); a.click(); a.remove(); }
 function deletePdf(i){ if(!confirm("Delete?")) return; (state.urduPdfs[pdfDate]||[]).splice(i,1); saveState(); renderPdfs(); }
+
+// ==============================
+// SETTINGS
+// ==============================
+function renderSettings() {
+  document.getElementById('api-url').value = config.apiUrl || '';
+  const el = document.getElementById('api-status');
+  if (config.apiEnabled && config.apiUrl) {
+    el.className = 'sync-status sync-online';
+    el.innerHTML = '<span class="sync-dot"></span> Online mode — API connected';
+  } else {
+    el.className = 'sync-status sync-offline';
+    el.innerHTML = '<span class="sync-dot"></span> Offline mode — localStorage only';
+  }
+}
+
+function saveApiSettings() {
+  const url = document.getElementById('api-url').value.trim();
+  config.apiUrl = url;
+  config.apiEnabled = !!url;
+  saveConfig();
+  updateApiStatusUI();
+  renderSettings();
+  const t = document.createElement('div');
+  t.textContent = config.apiEnabled ? 'API settings saved' : 'API disabled — using localStorage';
+  t.style.cssText = 'position:fixed;top:110px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:.8rem 1.4rem;border-radius:12px;font-size:.88rem;z-index:9999;box-shadow:0 8px 24px -6px rgba(29,78,216,0.35)';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 1800);
+}
+
+function clearApiSettings() {
+  config.apiUrl = '';
+  config.apiEnabled = false;
+  saveConfig();
+  updateApiStatusUI();
+  renderSettings();
+}
+
+function testApiConnection() {
+  if (!config.apiUrl) { alert('Please enter an API URL first.'); return; }
+  const el = document.getElementById('api-status');
+  el.className = 'sync-status sync-syncing';
+  el.innerHTML = '<span class="sync-dot"></span> Testing connection...';
+  apiRequest('ping', 'GET').then(() => {
+    el.className = 'sync-status sync-online';
+    el.innerHTML = '<span class="sync-dot"></span> Connection OK';
+  }).catch(() => {
+    el.className = 'sync-status sync-offline';
+    el.innerHTML = '<span class="sync-dot"></span> Connection failed';
+  });
+}
+
+function updateApiStatusUI() {
+  if (!document.getElementById('api-status')) return;
+  if (config.apiEnabled && config.apiUrl) {
+    document.getElementById('api-status').className = 'sync-status sync-online';
+    document.getElementById('api-status').innerHTML = '<span class="sync-dot"></span> Online mode — API connected';
+  } else {
+    document.getElementById('api-status').className = 'sync-status sync-offline';
+    document.getElementById('api-status').innerHTML = '<span class="sync-dot"></span> Offline mode — localStorage only';
+  }
+  const locBadge = document.getElementById('data-location-badge');
+  const locText = document.getElementById('data-location-text');
+  if (config.apiEnabled && config.apiUrl) {
+    locBadge.className = 'sync-dot';
+    locText.textContent = 'Backend API';
+  } else {
+    locBadge.className = 'sync-dot';
+    locText.textContent = 'Browser localStorage';
+  }
+}
 
 // ==============================
 // EXPORT / IMPORT BACKUP
@@ -1014,7 +1393,6 @@ function handleInput(input) {
   };
   r.readAsText(file);
 }
-// handleImport alias for inline onclick
 function handleImport(input) { handleInput(input); }
 
 // ==============================
