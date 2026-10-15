@@ -13,9 +13,11 @@
 
   /* Header */
   header { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 1rem 1rem 0.75rem; position: sticky; top: 0; z-index: 100; }
-  header .bar { display: flex; align-items: center; gap: 0.75rem; }
+  header .bar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
   header h1 { margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
   header p { margin: 0.15rem 0 0; font-size: 0.82rem; color: #6b7280; }
+  header .user { margin-left: auto; font-size: 0.82rem; color: #6b7280; }
+  header .user b { color: #111827; }
 
   /* Nav */
   nav { display: flex; gap: 0; overflow-x: auto; border-bottom: 1px solid #e5e7eb; scrollbar-width: none; }
@@ -25,11 +27,24 @@
   nav button:not(.active):hover { background: #f9fafb; color: #374151; }
 
   /* Container */
-  .container { max-width: 900px; margin: 0 auto; padding: 1rem 1rem 3rem; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 1rem 1rem 3rem; }
 
   /* Sections */
   .section { display: none; }
   .section.active { display: block; }
+
+  /* Login screen */
+  .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
+  .login-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 2rem 2.5rem; width: 100%; max-width: 420px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .login-card h2 { margin: 0 0 0.5rem; font-size: 1.15rem; font-weight: 700; }
+  .login-card p { margin: 0 0 1.5rem; font-size: 0.86rem; color: #6b7280; }
+  .login-card .err { color: #b91c1c; font-size: 0.82rem; margin-bottom: 1rem; display: none; }
+  .login-card label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; color: #374151; text-transform: uppercase; letter-spacing: 0.03em; }
+  .login-card input { width: 100%; padding: 0.65rem 0.8rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; margin-bottom: 1rem; background: #f9fafb; }
+  .login-card input:focus { border-color: #0b3d62; outline: none; background: #ffffff; }
+  .login-card button { width: 100%; padding: 0.7rem; border: none; border-radius: 8px; background: #0b3d62; color: #ffffff; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+  .login-card button:hover { background: #083150; }
+  .login-card .hint { margin-top: 1rem; font-size: 0.8rem; color: #6b7280; border-top: 1px solid #f3f4f6; padding-top: 0.75rem; }
 
   /* Cards */
   .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
@@ -47,11 +62,16 @@
   .dot-na { background: #9ca3af; }
 
   /* Tables */
-  table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
-  th { text-align: left; padding: 0.55rem 0.7rem; font-size: 0.72rem; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 2px solid #f3f4f6; white-space: nowrap; }
-  td { padding: 0.55rem 0.7rem; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { text-align: left; padding: 0.55rem 0.6rem; font-size: 0.72rem; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 2px solid #f3f4f6; white-space: nowrap; vertical-align: bottom; }
+  td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
   tr:hover { background: #f9fafb; }
+  tr.own-row { background: #fef3c7; border-left: 4px solid #d97706; }
+  tr.own-row td { border-color: #fde68a; }
+  td.nr { font-weight: 800; color: #374151; width: 35px; }
+  td.name { font-weight: 700; width: 190px; }
+  td.shift-col { width: 70px; }
 
   /* Badges */
   .badge { display: inline-block; padding: 0.12rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
@@ -71,16 +91,23 @@
   /* Driver chip */
   .driver-chip { font-size: 0.7rem; padding: 0.08rem 0.4rem; border-radius: 4px; background: #f59e0b; color: #ffffff; margin-left: 0.35rem; }
 
-  /* Rota day cards */
-  .rota-day { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
-  .rota-day h3 { margin: 0 0 0.6rem; font-size: 1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; color: #111827; }
-  .rota-team { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .person-chip { padding: 0.45rem 0.75rem; border-radius: 8px; background: #f3f4f6; border: 1px solid #e5e7eb; font-size: 0.84rem; font-weight: 600; color: #111827; display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
-  .person-chip.driver { border: 2px solid #d97706; background: #fdf4e3; }
-  .person-chip .shift-tag { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; padding: 0.08rem 0.35rem; border-radius: 4px; background: #e5e7eb; color: #374151; }
-  .night .shift-tag { background: #dbeafe; color: #1e3a8a; }
-  .morning .shift-tag { background: #dcfce7; color: #15803d; }
-  .day .shift-tag { background: #fef3c7; color: #b45309; }
+  /* Checkbox & inputs in sheet */
+  .cb-wrap { display: flex; align-items: center; gap: 0.5rem; justify-content: center; }
+  .cb-wrap input[type=checkbox] { width: 18px; height: 18px; accent-color: #0b3d62; cursor: pointer; }
+  input.time { width: 95px; padding: 0.35rem 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem; background: #ffffff; }
+  input.time:focus { border-color: #0b3d62; outline: none; }
+  input.notes { width: 100%; padding: 0.35rem 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem; background: #ffffff; }
+  input.notes:focus { border-color: #0b3d62; outline: none; }
+  input.amount { width: 80px; padding: 0.35rem 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem; background: #ffffff; text-align: right; }
+  input.amount:focus { border-color: #0b3d62; outline: none; }
+
+  /* Sheet controls */
+  .sheet-bar { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .sheet-bar button { padding: 0.5rem 0.9rem; border: 1px solid #d1d5db; border-radius: 8px; background: #ffffff; color: #374151; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+  .sheet-bar button:hover { border-color: #0b3d62; color: #0b3d62; }
+  .sheet-bar button.primary { background: #0b3d62; color: #ffffff; border-color: #0b3d62; }
+  .sheet-bar button.primary:hover { background: #083150; }
+  .save-msg { font-size: 0.82rem; color: #15803d; font-weight: 700; margin-top: 0.4rem; display: none; }
 
   /* Stats grid */
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.7rem; margin-bottom: 1rem; }
@@ -95,13 +122,28 @@
 
   .empty { text-align: center; color: #9ca3af; padding: 2rem; font-size: 0.9rem; }
 
-  /* Back to top hint on mobile */
+  /* Rota day cards */
+  .rota-day { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+  .rota-day h3 { margin: 0 0 0.6rem; font-size: 1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; color: #111827; }
+  .rota-team { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .person-chip { padding: 0.45rem 0.75rem; border-radius: 8px; background: #f3f4f6; border: 1px solid #e5e7eb; font-size: 0.84rem; font-weight: 600; color: #111827; display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+  .person-chip.driver { border: 2px solid #d97706; background: #fdf4e3; }
+  .person-chip .shift-tag { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; padding: 0.08rem 0.35rem; border-radius: 4px; background: #e5e7eb; color: #374151; }
+  .night .shift-tag { background: #dbeafe; color: #1e3a8a; }
+  .morning .shift-tag { background: #dcfce7; color: #15803d; }
+  .day .shift-tag { background: #fef3c7; color: #b45309; }
+
   @media (max-width: 600px) {
     .container { padding: 0.75rem 0.75rem 2.5rem; }
     .card { padding: 0.85rem 0.95rem; }
     .rota-day { padding: 0.85rem 0.95rem; }
-    th, td { padding: 0.45rem 0.6rem; font-size: 0.8rem; }
+    th, td { padding: 0.45rem 0.5rem; font-size: 0.78rem; }
     .stat .val { font-size: 1.2rem; }
+    table { font-size: 0.76rem; }
+    th { padding: 0.45rem 0.5rem; font-size: 0.68rem; }
+    td.name { width: 140px; }
+    input.time { width: 75px; }
+    input.amount { width: 65px; }
   }
 </style>
 </head>
@@ -111,6 +153,7 @@
   <div class="bar">
     <h1>HeM Testing Rota</h1>
     <p>17–19 October 2026 · 34 people · UK & Germany</p>
+    <div class="user" id="header-user" style="display:none">Signed in as <b id="user-name"></b> <button onclick="logout()" style="background:none;border:none;color:#0b3d62;font-weight:700;cursor:pointer;margin-left:0.5rem;font-size:0.8rem">Sign out</button></div>
   </div>
 </header>
 
@@ -118,15 +161,33 @@
   <button onclick="show('people')" id="tab-people">People</button>
   <button onclick="show('rota')" id="tab-rota">Rota 17–19 Oct</button>
   <button onclick="show('validation')" id="tab-validation">Validation &amp; Flags</button>
+  <button onclick="show('sheet')" id="tab-sheet">Tester Log</button>
 </nav>
 
 <div class="container">
+
+  <!-- LOGIN (shown when not signed in) -->
+  <section id="login-screen" class="section">
+    <div class="login-wrap">
+      <div class="login-card">
+        <h2>Tester Sign In</h2>
+        <p>Enter your tester ID and code to log your testing status.</p>
+        <div class="err" id="login-err">Invalid ID or code. Please try again.</div>
+        <label for="login-id">Tester ID</label>
+        <input type="text" id="login-id" placeholder="e.g. 01" maxlength="2">
+        <label for="login-code">Code</label>
+        <input type="text" id="login-code" placeholder="e.g. ABCD" maxlength="4">
+        <button onclick="doLogin()">Sign in</button>
+        <div class="hint">Not sure of your ID or code? Ask your rota coordinator.</div>
+      </div>
+    </div>
+  </div>
 
   <!-- PEOPLE -->
   <section id="people" class="section active">
     <div class="card">
       <h2>People (34)</h2>
-      <p>Tap a column header to scan. <span class="badge badge-driver">🚗</span> = designated driver · <span class="badge badge-na">—</span> = not on HeM rota</p>
+      <p>Each tester’s ID and login code are shown below.</p>
       <div class="legend">
         <span><span class="dot dot-night"></span> Night</span>
         <span><span class="dot dot-morning"></span> Morning</span>
@@ -134,10 +195,11 @@
         <span><span class="dot dot-na"></span> Not on rota</span>
         <span><span class="badge badge-uk">UK</span></span>
         <span><span class="badge badge-de">Germany</span></span>
+        <span><span class="badge badge-driver">🚗</span></span>
       </div>
       <table>
         <thead>
-          <tr><th>Name</th><th>Country</th><th>Shift</th><th>Driver</th><th>On HeM Rota</th><th>Notes</th></tr>
+          <tr><th>Nr</th><th>Name</th><th>Country</th><th>Shift</th><th>Driver</th><th>Tester ID</th><th>Login Code</th><th>On HeM Rota</th><th>Notes</th></tr>
         </thead>
         <tbody id="people-body"></tbody>
       </table>
@@ -162,37 +224,61 @@
     </div>
   </section>
 
+  <!-- TESTER LOG / SHEET -->
+  <section id="sheet" class="section">
+    <div class="card">
+      <h2>Tester Log — 17–19 October 2026</h2>
+      <p id="sheet-subtitle"></p>
+      <div class="sheet-bar">
+        <button class="primary" onclick="saveSheet()">Save changes</button>
+        <button onclick="resetSheet()">Reset all</button>
+        <span class="save-msg" id="save-msg">✓ Saved</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nr</th><th>Name</th><th>Shift</th><th>Amount</th><th>Arrived</th><th>Tested</th><th>Cleared</th><th>Start Time</th><th>End Time</th><th>Notes</th><th>Tested 2</th><th>Tested 3</th>
+          </tr>
+        </thead>
+        <tbody id="sheet-body"></tbody>
+      </table>
+    </div>
+  </section>
+
 </div>
 
 <script>
+// ==============================
+// PEOPLE DATA (34 people)
+// ==============================
 const people = [
-  { id: 1, name: "Abdul-Hai Sarmad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 2, name: "Humaid Mahmud Khan", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 3, name: "Fuad Alam", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 4, name: "Aamar Shezad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "morning", role: "Shift In-Charge" }] },
-  { id: 5, name: "Khaqan Muzafar Arain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 6, name: "Taha Uddin Khandaker", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 7, name: "Nasir Hussain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 8, name: "Ibtesam Ahmed Tahir", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "day", role: "Shift In-Charge" }] },
-  { id: 9, name: "Faizan Ahmad Gill", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Friday", onShift: "day", role: "Paddocks 1" }] },
-  { id: 10, name: "Subat Ahmad Munib", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Saturday", onShift: "night", role: "Barrier" }] },
-  { id: 11, name: "Hasher Ahmad Mubasher", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 12, name: "Labeed Ahmad Mirza", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 13, name: "Shazib Ahmad Arshad", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: null, role: "Not on rota — Ibtesam covers his post" }] },
+  { id: 1, name: "Abdul-Hai Sarmad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 2, name: "Humaid Mahmud Khan", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 3, name: "Fuad Alam", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 4, name: "Aamar Shezad", country: "UK", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "morning", role: "Shift In-Charge" }], note: "" },
+  { id: 5, name: "Khaqan Muzafar Arain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 6, name: "Taha Uddin Khandaker", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 7, name: "Nasir Hussain", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 8, name: "Ibtesam Ahmed Tahir", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: "day", role: "Shift In-Charge" }], note: "" },
+  { id: 9, name: "Faizan Ahmad Gill", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Friday", onShift: "day", role: "Paddocks 1" }], note: "" },
+  { id: 10, name: "Subat Ahmad Munib", country: "UK", shift: "morning", driver: false, hemOnRota: true, exceptions: [{ day: "Saturday", onShift: "night", role: "Barrier" }], note: "" },
+  { id: 11, name: "Hasher Ahmad Mubasher", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 12, name: "Labeed Ahmad Mirza", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 13, name: "Shazib Ahmad Arshad", country: "UK", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Tuesday", onShift: null, role: "Not on rota — Ibtesam covers his post" }], note: "" },
   { id: 14, name: "Adeeb Ahmed", country: "UK", shift: null, driver: true, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all. Designated driver." },
   { id: 15, name: "Mirza Anas Ahmad", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all." },
   { id: 16, name: "Mutahir Ahmad Danish", country: "UK", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — not on HeM rota at all." },
-  { id: 17, name: "Basil Javed", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 18, name: "Burhanuddin Faizan", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 19, name: "Mujahid Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 17, name: "Basil Javed", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 18, name: "Burhanuddin Faizan", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 19, name: "Mujahid Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "" },
   { id: 20, name: "Adeeb Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [], note: "Paddocks 1 every night." },
   { id: 21, name: "Wasiq Khalid", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "HeM rota name: Parvez Wasiq Khalid Bahatti" }], note: "Linked to HeM rota name: Parvez Wasiq Khalid Bahatti." },
   { id: 22, name: "Danish Ahmad", country: "Germany", shift: "night", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: "morning", role: "" }] },
-  { id: 23, name: "Jazib Aziz", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 23, name: "Jazib Aziz", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "" },
   { id: 24, name: "Awais Qamar", country: "Germany", shift: "morning", driver: false, hemOnRota: true, exceptions: [], note: "Morning only Monday and Saturday — free other days." },
   { id: 25, name: "Farhan Masroor", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [{ day: "Monday", onShift: null, role: "Free — Day shift Tue–Sat only" }] },
-  { id: 26, name: "Sultan Sami", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
-  { id: 27, name: "Hamzah Ahmed", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [] },
+  { id: 26, name: "Sultan Sami", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
+  { id: 27, name: "Hamzah Ahmed", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "" },
   { id: 28, name: "Mubariz Ahmad", country: "Germany", shift: "day", driver: false, hemOnRota: true, exceptions: [], note: "Counts as Day per your rota (HeM shift is CCTV, not one of the three)." },
   { id: 29, name: "Faroch Khurram", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota at all — free at any time." },
   { id: 30, name: "Adeeb Butt", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not Available — on HeM duty (Monday night, then morning)." },
@@ -202,51 +288,155 @@ const people = [
   { id: 34, name: "Sajeel Bajwa", country: "Germany", shift: null, driver: false, hemOnRota: false, exceptions: [], note: "Not on HeM rota." },
 ];
 
+// Login credentials per tester (ID + code). Displayed on People page so testers know theirs.
+function makeCredentials() {
+  const codes = [
+    "K7M2","P9W4","N1R8","H3T6","V5B2","J8F1","Q4D9","M6L3","S2X7","W1P8",
+    "G5T2","R9M4","C3V8","D1H6","B7F2","N9P4","L2X7","V6T1","F3M9","Q8R2",
+    "W5D9","J1B6","K4T8","G2V5","P7F1","M3X6","S9D2","A5N8","T4R1","C8L3",
+    "E6V9","H2P7","N3D5","J8M1","W4T6"
+  ];
+  people.forEach((p, i) => {
+    p.testerId = String(i + 1).padStart(2, '0');
+    p.loginCode = codes[i] || String(1000 + i);
+  });
+}
+makeCredentials();
+
+// Day names for 17–19 Oct 2026
 const rotaDays = [
   { date: "17 Oct 2026", dayName: "Saturday", iso: "2026-10-17", hemCovered: true },
   { date: "18 Oct 2026", dayName: "Sunday", iso: "2026-10-18", hemCovered: true },
   { date: "19 Oct 2026", dayName: "Monday", iso: "2026-10-19", hemCovered: false },
 ];
 
+// Testing rota: each day's team comes from ONE shift
 const testingRota = [
   { date: "2026-10-17", shift: "night", people: [2, 10, 18] },
   { date: "2026-10-18", shift: "morning", people: [8, 9, 23] },
   { date: "2026-10-19", shift: "night", people: [4, 3, 17] },
 ];
 
+// Sheet state (persisted to localStorage)
+const SHEET_KEY = "hem_sheet_v1";
+let sheet = loadSheet();
+
+function loadSheet() {
+  try {
+    const raw = localStorage.getItem(SHEET_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  // initialise blank rows
+  const rows = {};
+  people.forEach(p => {
+    rows[p.testerId] = { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
+  });
+  return rows;
+}
+
+function saveSheet() {
+  localStorage.setItem(SHEET_KEY, JSON.stringify(sheet));
+  const msg = document.getElementById('save-msg');
+  msg.style.display = 'inline';
+  setTimeout(() => { msg.style.display = 'none'; }, 1500);
+  renderSheet();
+}
+
+function resetSheet() {
+  if (!confirm("Reset all tester log entries?")) return;
+  people.forEach(p => {
+    sheet[p.testerId] = { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
+  });
+  saveSheet();
+}
+
+function updateField(testerId, field, value) {
+  // only allow editing your own row when logged in
+  if (!currentUser || currentUser.testerId !== testerId) return;
+  sheet[testerId][field] = value;
+  saveSheet();
+}
+
+// ==============================
+// AUTH
+// ==============================
+let currentUser = null;
+
+function checkAuth() {
+  try {
+    const raw = localStorage.getItem("hem_user_v1");
+    if (raw) currentUser = JSON.parse(raw);
+  } catch (e) {}
+  const el = document.getElementById('header-user');
+  const nameEl = document.getElementById('user-name');
+  if (currentUser) {
+    el.style.display = 'block';
+    nameEl.textContent = currentUser.name;
+    document.getElementById('login-screen').classList.remove('active');
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function doLogin() {
+  const id = document.getElementById('login-id').value.trim();
+  const code = document.getElementById('login-code').value.trim().toUpperCase();
+  const err = document.getElementById('login-err');
+  const p = people.find(x => x.testerId === id && x.loginCode === code);
+  if (!p) {
+    err.style.display = 'block';
+    return;
+  }
+  currentUser = { testerId: p.testerId, name: p.name };
+  localStorage.setItem("hem_user_v1", JSON.stringify(currentUser));
+  err.style.display = 'none';
+  document.getElementById('login-id').value = '';
+  document.getElementById('login-code').value = '';
+  checkAuth();
+  show('sheet');
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem("hem_user_v1");
+  checkAuth();
+  show('people');
+}
+
+// ==============================
+// RENDERERS
+// ==============================
 function show(id) {
+  // hide login screen when navigating anywhere
+  document.getElementById('login-screen').classList.remove('active');
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'sheet') renderSheet();
 }
 
 function shiftClass(s) { return { night: 'night', morning: 'morning', day: 'day', null: 'na' }[s] || 'na'; }
-function shiftLabel(s) {
-  if (!s) return '—';
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
+function shiftLabel(s) { if (!s) return '—'; return s.charAt(0).toUpperCase() + s.slice(1); }
 function countryClass(c) { return c === 'UK' ? 'badge-uk' : 'badge-de'; }
 
 function renderPeople() {
   const tb = document.getElementById('people-body');
-  tb.innerHTML = people.map(p => {
-    const exc = p.exceptions.length
-      ? p.exceptions.map(e => {
-          const on = e.onShift ? shiftLabel(e.onShift) : 'off rota';
-          return `${e.day}: ${on}${e.role ? ' (' + e.role + ')' : ''}`;
-        }).join('; ')
-      : (p.note || 'None');
+  tb.innerHTML = people.map((p, i) => {
     const driver = p.driver ? '<span class="badge badge-driver">🚗 Driver</span>' : '—';
     const onRota = p.hemOnRota ? '<span class="ok">✓ Yes</span>' : '<span class="flag">✗ No</span>';
     const note = p.note ? ' <span class="flag" style="font-size:0.78rem" title="' + p.note + '">!</span>' : '';
+    const codeHint = p.hemOnRota ? p.loginCode : '—';
     return `<tr>
-      <td><strong>${p.name}</strong>${note}</td>
+      <td class="nr">${i + 1}</td>
+      <td class="name"><strong>${p.name}</strong>${note}</td>
       <td><span class="badge ${countryClass(p.country)}">${p.country}</span></td>
       <td><span class="badge badge-${shiftClass(p.shift)}">${shiftLabel(p.shift)}</span></td>
       <td>${driver}</td>
+      <td><strong>${p.testerId}</strong></td>
+      <td><strong style="letter-spacing:0.05em">${codeHint}</strong></td>
       <td>${onRota}</td>
-      <td>${exc}</td>
+      <td>${p.note || '—'}</td>
     </tr>`;
   }).join('');
 }
@@ -266,7 +456,6 @@ function renderRota() {
       const shiftOnDay = personShiftOnDay(p, rd.dayName);
       const notOnRota = !p.hemOnRota;
       const mismatch = !notOnRota && shiftOnDay !== assignment.shift;
-      const allMatch = team.every(t => !t.notOnRota && t.shiftOnDay === assignment.shift);
       return { p, shiftOnDay, notOnRota, mismatch };
     });
     const allOk = team.every(t => !t.notOnRota && !t.mismatch);
@@ -350,10 +539,49 @@ function renderValidation() {
   }
 }
 
+function renderSheet() {
+  const subtitle = document.getElementById('sheet-subtitle');
+  const tb = document.getElementById('sheet-body');
+  const me = currentUser ? currentUser.testerId : null;
+
+  subtitle.textContent = currentUser
+    ? `Signed in as ${currentUser.name} (ID ${currentUser.testerId}) — you can edit your own row only.`
+    : `Not signed in — all rows are read-only. Sign in to log your status.`;
+
+  tb.innerHTML = people.map((p, i) => {
+    const row = sheet[p.testerId] || { amount: "", arrived: false, tested: false, cleared: false, start: "", end: "", notes: "", tested2: false, tested3: false };
+    const editable = me === p.testerId;
+    const drv = p.driver ? ' <span class="driver-chip">🚗</span>' : '';
+    const sc = shiftClass(p.shift);
+    const disabled = editable ? '' : ' disabled';
+    const checked = (v) => v ? 'checked' : '';
+    return `<tr class="${editable ? 'own-row' : ''}">
+      <td class="nr">${i + 1}</td>
+      <td class="name"><strong>${p.name}</strong>${drv}</td>
+      <td class="shift-col"><span class="badge badge-${sc}">${shiftLabel(p.shift)}</span></td>
+      <td><input type="text" class="amount" value="${escapeHtml(row.amount)}" onchange="updateField('${p.testerId}','amount',this.value)"${disabled} placeholder="—"></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.arrived)} onchange="updateField('${p.testerId}','arrived',this.checked)"${disabled}> Arrived</label></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.tested)} onchange="updateField('${p.testerId}','tested',this.checked)"${disabled}> Tested</label></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.cleared)} onchange="updateField('${p.testerId}','cleared',this.checked)"${disabled}> Cleared</label></td>
+      <td><input type="time" class="time" value="${escapeHtml(row.start)}" onchange="updateField('${p.testerId}','start',this.value)"${disabled}></td>
+      <td><input type="time" class="time" value="${escapeHtml(row.end)}" onchange="updateField('${p.testerId}','end',this.value)"${disabled}></td>
+      <td><input type="text" class="notes" value="${escapeHtml(row.notes)}" onchange="updateField('${p.testerId}','notes',this.value)"${disabled} placeholder="Notes"></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.tested2)} onchange="updateField('${p.testerId}','tested2',this.checked)"${disabled}> Tested 2</label></td>
+      <td><label class="cb-wrap"><input type="checkbox" ${checked(row.tested3)} onchange="updateField('${p.testerId}','tested3',this.checked)"${disabled}> Tested 3</label></td>
+    </tr>`;
+  }).join('');
+}
+
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[c]); }
+
+// ==============================
+// INIT
+// ==============================
+checkAuth();
 renderPeople();
 renderRota();
 renderValidation();
-show('people');
+
 </script>
 </body>
 </html>
