@@ -371,8 +371,13 @@
           </div>
         </div>
 
+        <div class="bar">
+          <button class="btn primary" onclick="exportBackup()">Export Backup</button>
+          <button class="btn" onclick="importBackup()">Import Backup</button>
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(this)">
+        </div>
         <div class="storage-info">
-          <strong>Where is data saved?</strong> All tester records, mulaqat lists, and uploaded PDFs are stored in your browser's localStorage on this device. Nothing is sent to a server. To move data to a SQL database or cloud, you would need to add a backend and connect it here.
+          <strong>Where is data saved?</strong> All tester records, mulaqat lists, and uploaded PDFs are stored in your browser's localStorage on this device. Use Export Backup to save a copy. Nothing is sent to a server.
         </div>
       </section>
 
@@ -946,6 +951,71 @@ function renderPdfs(){
 function viewPdf(i){ const p=(state.urduPdfs[pdfDate]||[])[i]; window.open(p.dataUrl,'_blank'); }
 function downloadPdf(i){ const p=(state.urduPdfs[pdfDate]||[])[i]; const a=document.createElement('a'); a.href=p.dataUrl; a.download=p.name; document.body.appendChild(a); a.click(); a.remove(); }
 function deletePdf(i){ if(!confirm("Delete?")) return; (state.urduPdfs[pdfDate]||[]).splice(i,1); saveState(); renderPdfs(); }
+
+// ==============================
+// EXPORT / IMPORT BACKUP
+// ==============================
+function exportBackup() {
+  const data = {
+    testerRecords: state.testerRecords,
+    mulaqatLists: state.mulaqatLists,
+    urduPdfs: state.urduPdfs,
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `hem-backup-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  const t = document.createElement('div');
+  t.textContent = 'Backup exported';
+  t.style.cssText = 'position:fixed;top:110px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;padding:.8rem 1.4rem;border-radius:12px;font-size:.88rem;z-index:9999;box-shadow:0 8px 24px -6px rgba(29,78,216,0.35)';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 1800);
+}
+
+function importBackup() {
+  document.getElementById('import-file').click();
+}
+
+function handleInput(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.testerRecords || !data.mulaqatLists) {
+        alert('Invalid backup file.');
+        return;
+      }
+      if (!confirm('Importing will replace all current data. Continue?')) return;
+      state.testerRecords = data.testerRecords;
+      state.mulaqatLists = data.mulaqatLists || {};
+      state.urduPdfs = data.urduPdfs || {};
+      saveState();
+      renderMulaqat();
+      renderPeople();
+      renderRota();
+      renderValidation();
+      renderDashboard();
+      const t = document.createElement('div');
+      t.textContent = 'Backup imported';
+      t.style.cssText = 'position:fixed;top:110px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:.8rem 1.4rem;border-radius:12px;font-size:.88rem;z-index:9999;box-shadow:0 8px 24px -6px rgba(16,185,129,0.35)';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 1800);
+    } catch (err) {
+      alert('Failed to read backup file.');
+    }
+  };
+  r.readAsText(file);
+}
+// handleImport alias for inline onclick
+function handleImport(input) { handleInput(input); }
 
 // ==============================
 // INIT
